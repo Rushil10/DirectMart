@@ -26,6 +26,7 @@ function SellerScreen(props) {
         setLoading(true) 
         getToken();
         fetchProducts();
+        setLoading(false)
     },[])
 
     React.useEffect(() => {
@@ -42,7 +43,6 @@ function SellerScreen(props) {
         console.log("after redux");
         // console.log(props.orders.sorders.orders);
         await setProducts(props.orders.sorders.orders)
-        setLoading(false)
     }
 
     const renderItem = (item) => {
@@ -54,21 +54,12 @@ function SellerScreen(props) {
     }
 
     return (
-        <View style={{flex:1}}>
-            <Header backgroundColor='#0ae38c' header='Seller' height={55} width={width} />
-            <View style={{marginTop: 20 , alignItems: "center"}}>
-                <View style={{height: height*0.06 , width: width*0.5 , borderRadius: 200 , backgroundColor: "#0ae38c" , alignItems: "center" , justifyContent: "center"}}>
-                    <Text style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}}>New Orders</Text>
-                </View>
-            </View>
-            {/* <TouchableOpacity onPress={addProduct}>
-                <Text>Call</Text>
-            </TouchableOpacity> */}
-            {/* <TouchableOpacity style={{width: 50 , height: 50 , backgroundColor: "orange"}} onPress={fetchProducts}>
-                <Text>Fetch Orders</Text>
-            </TouchableOpacity> */} 
-            {loading ?  <ActivityIndicator size="large" color="#00ff00" /> : 
-            <View style={{marginTop: 10 , alignItems: "center" , marginBottom : height*0.17}}>
+        <View style={{flex:1 , backgroundColor: "white"}}>
+            <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}} backgroundColor='#0ae38c' header='New Orders' height={55} width={width} />
+            {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
+                    <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
+                </View>  : 
+            <View style={{alignItems: "center" , marginBottom : 10}}>
                 <FlatList 
                     data={products}
                     renderItem={renderItem}

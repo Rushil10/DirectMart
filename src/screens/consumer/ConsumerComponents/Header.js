@@ -6,7 +6,7 @@ const {height,width} = Dimensions.get('window')
 function Header(props) {
     return (
         <View style={{height: props.height,borderBottomLeftRadius:9,borderBottomRightRadius:9,elevation:5,width: props.width,backgroundColor:props.backgroundColor,justifyContent:'center',paddingLeft:15}}>
-            <Text style={{color:'white',fontSize:21,fontFamily: "Montserrat-Medium"}}>{props.header}</Text>
+            <Text style={{color:'white',fontSize:22,fontFamily: "Montserrat-Bold"}}>{props.header}</Text>
         </View>
     )
 }

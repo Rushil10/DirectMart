@@ -14,6 +14,12 @@ class SigninComponent extends Component {
     // console.log(this.state.email);
     // console.log(this.state.pass);
 
+    
+
+    this.setState({
+      loading: true
+    })
+
     var seller = {
       shop_email:this.state.email,
       shop_password:this.state.pass
@@ -35,15 +41,24 @@ class SigninComponent extends Component {
         console.log(err);
     })
 
+      this.setState({
+        loading: false
+      })    
+
   }
 
     state = {
        isChecked: false ,
+       loading: false,
        email: "",
        pass: ""
      };
   render() {
     return (
+
+      this.state.loading ?   <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
+      <Image source={require('../../assets/loader/1490.gif')} resizeMode='contain' style={{width:windowWidth}} />
+  </View>  : 
         <View>
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
                 <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>Welcome to SHOPY!</Text>

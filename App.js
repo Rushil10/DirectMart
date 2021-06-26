@@ -49,6 +49,7 @@ import ordersOutForDelivery from './src/screens/seller/ordersStatus/ordersOutFor
 import deliveredOrders from './src/screens/seller/ordersStatus/deliveredOrders';
 import OrderSummary from './src/screens/consumer/OrderSummary';
 import AddAddress from './src/screens/consumer/AddAddress';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import ConsumerSearch from './src/screens/consumer/ConsumerSearch';
 
 
@@ -207,7 +208,6 @@ function SellerTopTabs() {
 function SellerStackScreens() {
   return(
     <SellerStack.Navigator tabBarOptions={{
-      showLabel:false,
       style:{
         height:57,
         backgroundColor:'white',
@@ -217,22 +217,22 @@ function SellerStackScreens() {
       activeTintColor:'#0ae38c'
     }}>
       <SellerStack.Screen options={{
-          tabBarLabel: 'Shops',
+       tabBarLabel: 'Products',
+       tabBarIcon: ({ color, size }) => ( 
+         <Icon name="box-open" color={color} size={25} />
+       ),
+     }} name="productsScreen" component={productsScreen} />
+      <SellerStack.Screen options={{
+          tabBarLabel: 'New Orders',
           tabBarIcon: ({ color, size }) => (
             <Icon2 name="shopping-store" color={color} size={25} />
           ),
         }} name="shops" component={SOS} />
-         <SellerStack.Screen options={{
-          tabBarLabel: 'Shops',
-          tabBarIcon: ({ color, size }) => (
-            <Icon2 name="search" color={color} size={25} />
-          ),
-        }} name="productsScreen" component={productsScreen} />
       <SellerStack.Screen
       options={{
-        tabBarLabel: 'Orders',
+        tabBarLabel: 'Active Orders',
         tabBarIcon: ({ color, size }) => (
-          <Icon3 name="bag" color={color} size={size} />
+          <Icon name="receipt" color={color} size={size} />
         ),
       }} name="Orders" component={STT} />
       <SellerStack.Screen options={{

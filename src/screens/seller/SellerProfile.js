@@ -25,7 +25,7 @@ function SellerProfile(props) {
     })
 
     return(
-        <ScrollView>
+        <ScrollView style={{backgroundColor: "white"}}>
             {/* <TouchableOpacity onPress={() => {
                 AsyncStorage.clear()
             }}>
@@ -74,7 +74,7 @@ function SellerProfile(props) {
                 </View>
             </View>
 
-            <View style={{flex: 0.5 ,marginLeft: windowWidth*0.1}}>
+            <View style={{flex: 0.5 ,marginRight: windowWidth*0.08 , alignItems: "flex-end"}}>
                 <Image
                     style={{
                         height: windowHeight*0.12      ,

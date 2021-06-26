@@ -4,10 +4,13 @@ import { View, Text, Alert,Dimensions , TouchableOpacity , ActivityIndicator , F
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'; 
 import { fetchOrders , orderReadyForDelivery , orderDelivered } from '../redux/seller/actions/ordersActions';
+import dayjs from 'dayjs';
 
 const {height,width} = Dimensions.get('window')
 
 function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery , orderDelivered }) {
+
+    const [loading , setLoading] = React.useState(false);
 
     const orderReadyForDeliveryAlert = () =>
     Alert.alert(
@@ -20,8 +23,12 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
           style: "cancel"
         },
         { text: "Yes", onPress: async () => {
+            setLoading(true)
             console.log("Yes");
             await orderReadyForDelivery(item.item);
+            setTimeout(function(){ 
+                setLoading(false)
+             }, 3000);
         } }
       ]
     );
@@ -37,7 +44,11 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
           style: "cancel"
         },
         { text: "Yes", onPress: async () => {
+            setLoading(true)
             await orderDelivered(item.item);
+            setTimeout(function(){ 
+                setLoading(false)
+             }, 3000);
         } }
       ]
     );
@@ -49,8 +60,14 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
     );
     // console.log(item);
     return(
+
+        loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
+                    <Image source={require('../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width , height: height*0.25}} />
+                </View> : 
+
         <View>
             <TouchableOpacity onPress={navigation}>
+            
                 <View style={styles.renderItem}>
                     <View style={styles.upper}>
                         <View style={{flexDirection : "row"}}>
@@ -63,7 +80,7 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
                                 <Text style={styles.text}>{item.item.consumer_contact}</Text>
                             </View>
                             
-                            <View style={{justifyContent: "center" , marginLeft: width*0.35}}>
+                            <View style={{justifyContent: "center" , marginLeft: width*0.28}}>
                                 <Text style={{fontFamily: "Montserrat-ExtraBold"}}>Price: {item.item.tota}</Text>
                             </View>
                         </View>
@@ -81,7 +98,7 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
                         <View style={{justifyContent: "center" , marginLeft: 10}}>
                             <Text style={styles.text}>ORDERED ON</Text>
                         </View>
-                            <Text style={styles.text}>{item.item.ordered_time}</Text>
+                            <Text style={styles.text}>{dayjs(item.item.ordered_time).format('DD MMMM , dddd , h:m a')}</Text>
                     </View>
 
                     <TouchableOpacity style={{alignItems: "center" , marginBottom: 10}} onPress={() => {
@@ -99,9 +116,9 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
                         </View>
                     </TouchableOpacity>
 
-                </View>
-            </TouchableOpacity>
-        </View>
+                </View> 
+            </TouchableOpacity> 
+        </View> 
         )
 }
 

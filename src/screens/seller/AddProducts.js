@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, {useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage} from 'react-native';
+import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage , ActivityIndicator} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -54,20 +54,20 @@ function AddProducts (props) {
 
     const uploadImageToFirebase = async() => {
         if(path){
-            setLoading(true);
+            
             const name = generateString(9);
             let reference = storage().ref(name);
             await reference.putFile(path[0].uri)
             let url = await reference.getDownloadURL();
             setImg(url);
             console.log(url);
-            setLoading(false);
         } else {
             console.log("No image");
         }
     }
 
     const submitHandler = async() => {
+        setLoading(true);
         await uploadImageToFirebase();
         let product = {
             product_name: name,
@@ -85,12 +85,17 @@ function AddProducts (props) {
 
         console.log(props);
         props.route.params.addProducts(product)
+
+        setTimeout(function(){ 
+            setLoading(false)
+         }, 3000);
+
     }
 
 
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1 , backgroundColor: "white"}}>
             <View>
             <Image
               style={{
@@ -101,6 +106,12 @@ function AddProducts (props) {
               source={require('../../../assets/loginImages/AngleTopLeft.png')}
               />
             </View>
+
+            { loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
+                    <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:windowWidth}} />
+                </View> :  
+
+
               <ScrollView>
             <View>
 
@@ -221,7 +232,7 @@ function AddProducts (props) {
                 </TouchableOpacity>
             </View>  
 
-        </ScrollView>
+        </ScrollView> }
 
             <View style={{
                 flex: 1,

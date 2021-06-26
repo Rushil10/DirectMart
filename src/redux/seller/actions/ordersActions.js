@@ -70,6 +70,8 @@ export const orderReadyForDelivery = (item) => async dispatch => {
         })
     .then(async(res) => {
         console.log("))))))))))))))))))))))))))))))))");
+        console.log(item);
+        item.delivery_status = "Out For Delivery"
         console.log("response");
         console.log(res.data);
         dispatch({type:ORDER_READY_FOR_DELIVERY,item: item})
@@ -96,6 +98,7 @@ export const orderDelivered = (item) => async dispatch => {
         })
     .then(async(res) => {
         console.log("))))))))))))))))))))))))))))))))");
+        item.delivery_status = "Delivered"
         console.log("response");
         console.log(res.data);
         dispatch({type:ORDER_DELIVERED,item: item})
