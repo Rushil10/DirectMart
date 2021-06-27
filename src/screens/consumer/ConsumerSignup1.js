@@ -4,6 +4,7 @@ import { View,ScrollView,ImageBackground,TouchableOpacity, Text,Button,FlatList,
 import { Header } from '@react-navigation/stack';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
+import ErrorModal from './ConsumerComponents/ErrorModal';
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -25,6 +26,14 @@ function ConsumerSignup1(props) {
     const [path,setPath] = React.useState(null);
     const [loading,setLoading] = React.useState(false);
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 40
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
+
     console.log(props.route)
     const email = props.route.params.email
     const password = props.route.params.password
@@ -40,6 +49,22 @@ function ConsumerSignup1(props) {
              media.push(media1)
              setPath(media)
         })
+    }
+
+    const checkNameAndContact = () => {
+        if(name.length===0 || contact.length===0) {
+            setHeading('Invalid Credential')
+            setError('Name and Contact Number must Not be empty !')
+            showErr(true)
+            setLoading(false)
+        } else if(contact.length!==10){
+            setHeading('Invalid Credential')
+            setError('Contact Number must be of 10 digits !')
+            showErr(true)
+            setLoading(false)
+        } else {
+            uploadImageToFirebase()
+        }
     }
 
     const uploadImageToFirebase = async() => {
@@ -61,6 +86,7 @@ function ConsumerSignup1(props) {
     return (
         <KeyboardAvoidingView keyboardVerticalOffset={-500} behavior="padding" enabled style={{flex:1,backgroundColor:'white'}}>
             <ScrollView>
+            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
             <ImageBackground source={require('../../images/bg1.jpg')} resizeMode="cover" style={{height:height/1.75,width:width,justifyContent:'center'}} >
                 <TouchableOpacity onPress={selectImage}>
                     {
@@ -76,10 +102,10 @@ function ConsumerSignup1(props) {
                     <TextInput style={styles.input} value={name} placeholder="Name" onChangeText={(val) => setName(val)} />
                 </View>
                 <View style={{flexDirection:'row'}}>
-                    <TextInput style={styles.input} value={contact} placeholder="Contact" onChangeText={(val) => setContact(val)} />
+                    <TextInput keyboardType='number-pad' style={styles.input} value={contact} placeholder="Contact" onChangeText={(val) => setContact(val)} />
                 </View>
                 <View>
-                    <TouchableOpacity onPress={uploadImageToFirebase} style={{width:width-75,alignItems:'center',marginTop:25,borderRadius:9,height:50,backgroundColor:'#ff4500',alignSelf:'center',justifyContent:'center'}}>
+                    <TouchableOpacity onPress={checkNameAndContact} style={{width:width-75,alignItems:'center',marginTop:25,borderRadius:9,height:50,backgroundColor:'#ff4500',alignSelf:'center',justifyContent:'center'}}>
                         <View>
                         <Text style={{color:'white',fontSize:21}}>{
                         loading?

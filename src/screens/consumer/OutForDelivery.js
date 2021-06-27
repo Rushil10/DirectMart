@@ -36,16 +36,25 @@ function OutForDelivery(props) {
     return (
         <View style={{flex:1}}>
             {
-                loading ?
+                props.orders.outLoading ?
                 <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../images/l2.gif')} resizeMode='contain' style={{width:width}} />
                 </View>
                 :
                 <View style={{flex:1,backgroundColor:'white',paddingLeft:5,paddingRight:5,paddingBottom:0}}>
-                    <FlatList
+                    {
+                        orders.length>0
+                        ?
+                        <FlatList
                     data={orders}
                     renderItem={({item,index}) => <OrderCard item={item} status="OUT FOR DELIVERY" /> }
                     />
+                    :
+                    <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>
+                        <Text style={{fontSize:22.5,color:'gray'}}>No Orders are Currently</Text> 
+                        <Text style={{fontSize:22.5,color:'gray'}}>Out For Delivery</Text> 
+                        </View>
+                    }
                 </View>
             }
         </View>

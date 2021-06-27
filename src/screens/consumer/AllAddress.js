@@ -84,6 +84,7 @@ function AllAddress(props) {
 
     const addNewAddress = (item) => {
         //var old = all;
+        console.log(item);
         setLoading(true);
         setAll([item,...all]);
         setLoading(false);

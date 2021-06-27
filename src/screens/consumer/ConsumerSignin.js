@@ -25,6 +25,8 @@ function ConsumerSignin(props) {
         showErr(false)
     }
 
+    var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
+
     const signin = () => {
         setLoading(true);
         if(email.length === 0 || password.length === 0){
@@ -44,7 +46,13 @@ function ConsumerSignin(props) {
                 showErr(true)
                 setLoading(false)
             }
+        } else if(!email.match(pattern)) {
+            setHeading('Invalid Credential')
+                setError('Enter a Valid Email !')
+                showErr(true)
+                setLoading(false)
         } else {
+            console.log(email.match(pattern))
             var consumer = {
                 consumer_email:email,
                 consumer_password:password
@@ -52,7 +60,8 @@ function ConsumerSignin(props) {
             axios.post(`${url}/consumer/login`,consumer)
             .then(async(res) => {
                 console.log(res.data);
-                var token = res.data.token;
+                if(res.data.token){
+                    var token = res.data.token;
                 var decodedToken = jwt_decode(token);
                 await AsyncStorage.setItem('user_token',token);
                 props.setLocation(decodedToken.latitude,decodedToken.longitude);
@@ -62,10 +71,19 @@ function ConsumerSignin(props) {
                     index: 0,
                     routes: [{name: 'Consumer'}],
                   });
+                } else {
+                    setHeading('Invalid Credential')
+                setError(res.data.error)
+                showErr(true)
+                setLoading(false)
+                }
             })
             .catch(err => {
-                console.log(err);
-                setLoading(false);
+                console.log(err,'error');
+                setHeading('Invalid Credential')
+                //setError(err)
+                showErr(true)
+                setLoading(false)
             })
 
         }
@@ -77,6 +95,23 @@ function ConsumerSignin(props) {
             setError('Email and Password must Not be empty !')
             showErr(true)
             setLoading(false)
+        } else if(email.split(' ').length>1 || password.split(' ').length>1) {
+            if(email.split(' ').length>1 ){
+                setHeading('Invalid Credential')
+                setError('Email must Not contain space !')
+                showErr(true)
+                setLoading(false)
+            } else {
+                setHeading('Invalid Credential')
+                setError('Password must Not contain space !')
+                showErr(true)
+                setLoading(false)
+            }
+        } else if(!email.match(pattern)) {
+            setHeading('Invalid Credential')
+                setError('Enter a Valid Email !')
+                showErr(true)
+                setLoading(false)
         } else {
             props.navigation.push('ConsumerSignup1',{email:email,password:password})
         }

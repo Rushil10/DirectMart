@@ -53,10 +53,18 @@ function ShopProducts(props) {
                 </View>
                 :
                 <View style={{flex:1,backgroundColor:'white'}}>
-                    <FlatList
-                    data={products}
-                    renderItem={({item,index}) => <ProductCard item={item} token={userToken} /> }
-                    />
+                    {
+                        products.length>0 ?
+                        <FlatList
+                        data={products}
+                        renderItem={({item,index}) => <ProductCard item={item} token={userToken} /> }
+                        />
+                        :
+                        <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>
+                        <Text style={{fontSize:22.5,color:'gray'}}>No Products Added By {shop.shop_name}</Text> 
+                        </View>
+
+                    }
                 </View>
             }
         </View>
