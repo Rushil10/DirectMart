@@ -163,7 +163,7 @@ function COFDS() {
 
 function NearbyShopss() {
   return (
-    <NearbyShopStack.Navigator screenOptions={{
+    <NearbyShopStack.Navigator initialRouteName='allShops' screenOptions={{
       headerShown: false
     }}>
       <NearbyShopStack.Screen name="allShops" component={NearbyShops} />
@@ -316,9 +316,14 @@ function MainStackScreens() {
 
 
 function App() {
+
+  const linking = {
+    prefixes: ['localapp://'],
+  };
+
   return (
     <Provider store={store}>
-      <NavigationContainer>
+      <NavigationContainer linking={linking} >
       <Stack.Navigator screenOptions={{
     headerShown: false
   }}>

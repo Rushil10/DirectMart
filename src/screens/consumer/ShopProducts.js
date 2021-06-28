@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar } from 'react-native';
+import { View, Text, AsyncStorage,Dimensions,Image,BackHandler,FlatList,StatusBar, Linking } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './ConsumerComponents/Header';
@@ -15,10 +15,10 @@ function ShopProducts(props) {
     const [products,setProducts] = React.useState([])
     const [error,setError] = React.useState('');
     const [userToken,setuserToken] = React.useState(null)
+    const [lurl,setLurl] = React.useState(null)
 
     const getShopProducts = async() => {
         const shop = props.route.params.shop
-        console.log(shop)
         var token = await AsyncStorage.getItem('user_token')
         setuserToken(token)
         setLoading(true)
@@ -41,6 +41,25 @@ function ShopProducts(props) {
     React.useEffect(() => {
         getShopProducts();
     },[])
+
+   
+    React.useEffect(() => {
+        const backAction = () => {
+        if(!shop.shop_image){
+            props.navigation.replace('allShops')
+        } else {
+            props.navigation.pop()
+        }
+        return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+        );
+    
+        return () => backHandler.remove();
+    }, []); 
 
     return (
         <View style={{flex:1}}>
