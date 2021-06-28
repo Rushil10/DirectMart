@@ -1,5 +1,5 @@
 // In App.js in a new project
-
+import PushNotification from "react-native-push-notification";
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -316,6 +316,7 @@ function MainStackScreens() {
 
 
 function App() {
+  
 
   const linking = {
     prefixes: ['localapp://'],
