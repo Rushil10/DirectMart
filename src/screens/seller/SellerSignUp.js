@@ -1,6 +1,7 @@
 import React, { Component , useState } from 'react';
 import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , KeyboardAvoidingView, ScrollView} from 'react-native';
 import Navbar from '../../components/Navbar'
+import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -14,9 +15,40 @@ function SellerSignUp (props) {
     const [pass , setPass] = useState("");
     const [rpass , setrpass] = useState("");
 
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
+
+    var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
+
+    const goToSignup2 = () => {
+        if(sname.length===0 || oname.length===0 || uname.length===0 || pass.length===0 || rpass.length===0){
+            setHeading('Invalid Credential')
+            setError('Shop Name , Owner Name , Email and Password must Not be empty !')
+            showErr(true)
+            //setLoading(false)
+        } else if(!uname.match(pattern)) {
+            setHeading('Invalid Credential')
+                setError('Enter a Valid Email !')
+                showErr(true)
+                //setLoading(false)
+        } else {
+            props.navigation.push("SellerSignUp2" , {
+                sname : sname,
+                oname : oname,
+                uname : uname,
+                pass  : pass ,
+                rpass : rpass,})
+        }
+    }
+
     return (
       
-        <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
             <View>
             <Image
               style={{
@@ -30,7 +62,7 @@ function SellerSignUp (props) {
 
             <KeyboardAvoidingView>
             <ScrollView>
-            
+            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
             <View>
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
                 <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>New to SHOPY!</Text>
@@ -102,14 +134,7 @@ function SellerSignUp (props) {
                 </View>
             </View>
            <View style={{alignItems: "center" , marginTop: 15}}>
-                <TouchableOpacity style={styles.submit} onPress={() => {
-                    props.navigation.navigate("SellerSignUp2" , {
-                        sname : sname,
-                        oname : oname,
-                        uname : uname,
-                        pass  : pass ,
-                        rpass : rpass,})
-                }}>
+                <TouchableOpacity style={styles.submit} onPress={goToSignup2}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                          Next
                      </Text>
@@ -136,7 +161,7 @@ function SellerSignUp (props) {
             />
             </View>
 
-        </View>
+        </ScrollView>
     );
 }
 

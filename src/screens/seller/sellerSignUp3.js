@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar'
 import GetLocation from 'react-native-get-location'
 import axios from 'axios';
 import {url} from '../../api/api'
+import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -13,9 +14,18 @@ function SellerSignUp (props) {
   
   const[location , setLocation] = useState(null)
   const[loader , setLoader] = useState(false)
+
+  const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
   
   const submitHandler = async () => {
-    let sname = props.route.params.sname
+    if(location){
+      let sname = props.route.params.sname
     let oname = props.route.params.oname
     let uname = props.route.params.uname
     let pass  = props.route.params.pass
@@ -40,10 +50,9 @@ function SellerSignUp (props) {
      shop_timing   : time,
      shop_upiId     : id,
      shop_email     : uname ,
-     shop_password  : pass
+     shop_password  : pass,
+     shop_description : desc
     }
-
-
     await axios.post(`${url}/shop/signup`,seller, {
       headers: {
       'Content-Type': 'application/json'
@@ -56,12 +65,19 @@ function SellerSignUp (props) {
         index: 0,
         routes: [{name: 'Seller'}],
     });
-  })
+  }) 
+    } else {
+      setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            showErr(true)
+                      setLoader(false)
+    }
   }
 
     return (
         <View style={{flex: 1}}>
             <View>
+            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
             <Image
               style={{
                 height: windowHeight*0.08,
@@ -91,6 +107,11 @@ function SellerSignUp (props) {
                       console.log(location);
                       setLocation(res);
                       setLoader(false);
+                    }).catch(err => {
+                      setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            showErr(true)
+                      setLoader(false)
                     })
                     }}>
                       <View style={{height: windowHeight*0.07 , width: windowWidth*0.5 ,alignItems: "center" , justifyContent: "center", backgroundColor: "#0ae38c" , marginTop: 20 , borderRadius: 20}}>
