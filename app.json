@@ -1,9 +1,9 @@
 {
-  "name": "extension",
-  "displayName": "extension",
+  "name": "localApp",
+  "displayName": "localApp",
   "expo": {
-    "name": "extension",
-    "slug": "extension",
+    "name": "localApp",
+    "slug": "localApp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

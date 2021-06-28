@@ -1,10 +1,13 @@
 import * as React from 'react';
 import jwtDecode from 'jwt-decode';
-import { View, Text, AsyncStorage,Image,Dimensions,FlatList, TouchableOpacity, StyleSheet , ScrollView } from 'react-native';
+import { View, Text, AsyncStorage,Image,Dimensions,FlatList, TouchableOpacity, StyleSheet , ScrollView, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import { url } from '../../api/api'
 import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import Header from '../consumer/ConsumerComponents/Header';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Share from 'react-native-share'
+import ImgToBase64 from 'react-native-image-base64';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -13,6 +16,7 @@ const windowHeight = Dimensions.get('window').height;
 function SellerProfile(props) {
 
     const [info , setInfo] = React.useState([]);
+    const [shareLoading,setShareLoading] = React.useState(false)
 
     const getDetails = async () => {
         var token = await AsyncStorage.getItem('shop_token');
@@ -24,6 +28,27 @@ function SellerProfile(props) {
         getDetails()
     })
 
+    const shareHandler = () => {
+        let img = ""
+        setShareLoading(true);
+        ImgToBase64.getBase64String(info.shop_image)
+        .then(base64String => {
+         img = 'data:image/jpeg;base64,' + base64String
+         Share.open({
+            title:`Share My Shop ${info.shop_name}`,
+            message:`Checkout products of my shop ${info.shop_name} on localapp by clicking on this link https://www.localapp.in/shop/${info.shop_name}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link `,
+            url:img
+        }
+        ).then((res) => {
+            console.log(res)
+            setShareLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            setShareLoading(false)
+        })
+        })
+    }
+
     return(
         <ScrollView style={{backgroundColor: "white"}}>
             {/* <TouchableOpacity onPress={() => {
@@ -33,14 +58,16 @@ function SellerProfile(props) {
                     <Text>LOG OUT</Text>
                 </View>
             </TouchableOpacity> */}
-
+            <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: 19}}  backgroundColor='#0ae38c' header='Profile' height={55} width={windowWidth} />
             <View style={{
-                alignItems: "center"
+                alignItems: "center",
+                paddingTop:15
             }} > 
                 <Image
                     style={{
-                        height: windowHeight*0.3      ,
-                        width: windowWidth
+                        height: windowHeight*0.3,
+                        width: windowWidth,
+                        resizeMode:'cover'
                     }}
                     source={{
                         uri: info.shop_image
@@ -89,7 +116,7 @@ function SellerProfile(props) {
 
                     {/* order status */}
 
-                    <View style={{flexDirection: "row" , marginTop: 20}}>
+                    {/* <View style={{flexDirection: "row" , marginTop: 20}}>
                         <View style={{width: windowWidth*0.5 , height: windowHeight*0.1 , backgroundColor: "#FF616D" , alignItems: "center" , justifyContent: "center"}}>
                             <Text style={styles.text1}>Active Orders</Text>
                             <Text style={styles.text1}>10</Text>
@@ -98,9 +125,25 @@ function SellerProfile(props) {
                             <Text style={styles.text1}>Total Orders</Text>
                             <Text style={styles.text1}>20</Text>
                         </View>
-                    </View>
+                    </View> */}
 
                     {/* BASIC INFO STARTS */}
+            <View style={{padding:9}}>
+                <TouchableWithoutFeedback onPress={shareHandler}>
+                    <View style={{paddingVertical:9,backgroundColor:'#ff616d',borderRadius:9}}>
+                        {
+                            !shareLoading
+                            ?
+                            <View style={{paddingVertical:0,alignItems:'center',borderRadius:9,flexDirection:'row',justifyContent:'center',backgroundColor:'#ff616d'}}>
+                                <AntDesign name='sharealt' size={29} color='white' />
+                        <Text style={{color:'white',fontSize:19,marginLeft:15}}>Share My Shop {info.shop_name}</Text>
+                                </View>
+                        :
+                        <ActivityIndicator color='white' size={29} />
+                        }
+                    </View>
+                </TouchableWithoutFeedback>
+                </View>
 
             <View style={{}}>
 

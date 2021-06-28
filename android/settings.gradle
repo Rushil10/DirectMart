@@ -1,4 +1,4 @@
-rootProject.name = 'extension'
+rootProject.name = 'localApp'
 
 apply from: '../node_modules/react-native-unimodules/gradle.groovy'
 includeUnimodulesProjects()

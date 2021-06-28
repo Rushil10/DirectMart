@@ -1,4 +1,4 @@
-package com.extension.generated;
+package com.localApp.generated;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar } from 'react-native';
+import { View, Text, AsyncStorage,Dimensions,Image,BackHandler,FlatList,StatusBar, Linking } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './ConsumerComponents/Header';
@@ -15,10 +15,10 @@ function ShopProducts(props) {
     const [products,setProducts] = React.useState([])
     const [error,setError] = React.useState('');
     const [userToken,setuserToken] = React.useState(null)
+    const [lurl,setLurl] = React.useState(null)
 
     const getShopProducts = async() => {
         const shop = props.route.params.shop
-        console.log(shop)
         var token = await AsyncStorage.getItem('user_token')
         setuserToken(token)
         setLoading(true)
@@ -42,6 +42,25 @@ function ShopProducts(props) {
         getShopProducts();
     },[])
 
+   
+    React.useEffect(() => {
+        const backAction = () => {
+        if(!shop.shop_image){
+            props.navigation.replace('allShops')
+        } else {
+            props.navigation.pop()
+        }
+        return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+        );
+    
+        return () => backHandler.remove();
+    }, []); 
+
     return (
         <View style={{flex:1}}>
             <StatusBar backgroundColor="#ff6347" />
@@ -53,10 +72,18 @@ function ShopProducts(props) {
                 </View>
                 :
                 <View style={{flex:1,backgroundColor:'white'}}>
-                    <FlatList
-                    data={products}
-                    renderItem={({item,index}) => <ProductCard item={item} token={userToken} /> }
-                    />
+                    {
+                        products.length>0 ?
+                        <FlatList
+                        data={products}
+                        renderItem={({item,index}) => <ProductCard item={item} token={userToken} /> }
+                        />
+                        :
+                        <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>
+                        <Text style={{fontSize:22.5,color:'gray'}}>No Products Added By {shop.shop_name}</Text> 
+                        </View>
+
+                    }
                 </View>
             }
         </View>

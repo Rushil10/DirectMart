@@ -67,10 +67,21 @@ function NearbyShops(props) {
                 </View>
                 :
                 <View style={{backgroundColor:'white',flex:1}}>
-                    <FlatList
+                    {
+                        shops.length > 0 ?
+                        <FlatList
                     data={shops}
                     renderItem={({item,index}) => <ShopCard item={item} /> }
                     />
+                    :
+                    <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>
+                        <Text style={{fontSize:22.5,color:'#ff6347'}}>No Shops Have Registered</Text>
+                        <Text style={{fontSize:22.5,color:'#ff6347'}}> In Your 15 km Range</Text>
+
+                        <Text style={{fontSize:19,color:'gray',marginTop:5}}>Help Us in Spreading Awareness and educate the small buisness owners to take advantage of this app and register themselves.</Text>
+                        <Text style={{fontSize:22.5,color:'#ff6347',marginTop:15}}>Thank You</Text>
+                        </View>
+                    }
                 </View>
             }
         </View>

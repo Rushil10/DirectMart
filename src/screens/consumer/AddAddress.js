@@ -7,6 +7,7 @@ import {url} from '../../api/api'
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 import { setLocation } from '../../redux/consumer/actions/latlngactions';
+import ErrorModal from './ConsumerComponents/ErrorModal';
 
 const {height,width} = Dimensions.get('window')
 
@@ -19,8 +20,15 @@ function AddAddress(props) {
     const [latitude,setLatitude] = React.useState(null);
     const [longitude,setLongitude] = React.useState(null);
     const [cll,setCll] = React.useState(false);
-    const [aname,setAname] = React.useState('')
+    const [aname,setAname] = React.useState('Work')
     const [loading,setLoading] = React.useState(false);
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
 
     const signup = async() => {
         setCll(true);
@@ -31,13 +39,23 @@ function AddAddress(props) {
             console.log(location);
             setLongitude(location.longitude)
             setLatitude(location.latitude)
-            await AsyncStorage.setItem('latitude',location.latitude.toString())
+            if(flat.length===0 || landmark.length===0 || area.length===0 || town.length===0 || aname.length===0){
+                setHeading('Invalide Address')
+            setError('Flat , Landmark , Area , Town and Name cannot be empty !')
+            showErr(true)
+            setCll(false);
+            } else {
+                await AsyncStorage.setItem('latitude',location.latitude.toString())
             await AsyncStorage.setItem('longitude',location.longitude.toString())
             addAddress(location.latitude,location.longitude)
+            }
         })
         .catch(error => {
             const { code, message } = error;
             console.warn(code, message);
+            setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            showErr(true)
             setCll(false);
         })
     }
@@ -69,6 +87,7 @@ function AddAddress(props) {
     return (
         <KeyboardAvoidingView keyboardVerticalOffset={-500} behavior="padding" enabled style={{flex:1,backgroundColor:'white'}}>
             <ScrollView style={{flex:1}}>
+            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
             <ImageBackground source={require('../../images/bg1.jpg')} resizeMode="cover" style={{height:height/2.75,width:width,justifyContent:'center'}} >
                 <Text style={{color:'white',fontSize:29,fontWeight:'600',alignSelf:'center'}}>Add New Address</Text>
                 </ImageBackground>
@@ -87,6 +106,9 @@ function AddAddress(props) {
                 <View style={{flexDirection:'row'}}>
                     <TextInput style={styles.input} value={aname} placeholder="Address Name" onChangeText={(val) => setAname(val)} />
                 </View>
+                <View style={{flexDirection:'row',marginLeft:15}}>
+                    <Text>Give Your address a name like Work , Home etc</Text>
+                    </View>
                 <View>
                     <TouchableOpacity onPress={signup} style={{width:width-75,alignItems:'center',marginTop:25,borderRadius:9,height:50,backgroundColor:'#ff4500',alignSelf:'center',justifyContent:'center'}}>
                         <View>

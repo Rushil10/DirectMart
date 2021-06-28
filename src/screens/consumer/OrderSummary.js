@@ -31,10 +31,15 @@ function OrderSummary(props) {
         var consumer = jwtDecode(token)
         setConsumer(consumer)
         const data = props.route.params.order;
-        console.log(data);
-        setOrder(data);
-        var total =0;
-        data.map(or => {
+        const resp = await axios.get(`${url}/consumer/cartItemsOfShop/${data[0].shop_id}`,{
+            headers: {
+                Authorization : `Bearer ${token}`
+            }
+        })
+        console.log(resp.data);
+        setOrder(resp.data);
+        var total = 0;
+        resp.data.map(or => {
             total += or.total
         })
         setTotal(total)
@@ -112,7 +117,15 @@ function OrderSummary(props) {
                 loading ?
                 <Image source={require('../../images/l2.gif')} resizeMode='contain' style={{width:width}} />
                 :
+                order.length > 0 ?
                 <ScrollView style={{padding:15,flex:1,paddingBottom:55}}>
+                    {
+                        orderDone &&
+                        <View style={{marginTop:0,alignItems:'center',marginBottom:9}}>
+                        <Text style={{fontSize:25,marginBottom:9,color:'#ff6347',fontFamily: "Montserrat-Medium"}}>Order Placed</Text>
+                        <Image source={require('../../images/os.gif')} style={{width:width,height:width}} />
+                    </View>
+                    }
                     <Text style={{fontSize:21.5}}>Cart Total : Rs {total}</Text>
                 <View style={{marginTop:5,marginBottom:5}}>
                 <Text style={{fontSize:18,fontFamily: "Montserrat-Bold"}}>DELIVER TO</Text>
@@ -133,7 +146,7 @@ function OrderSummary(props) {
                     />
                 </View>
                 {
-                    !orderDone ?
+                    !orderDone &&
                     <View>
                         <Text style={{fontSize:22.5,color:'black',fontFamily: "Montserrat-Medium"}}>Payment Method</Text>
                         <View>
@@ -154,13 +167,13 @@ function OrderSummary(props) {
                 </TouchableWithoutFeedback>
                 </View>
                     </View>
-                    :
-                    <View style={{marginTop:0,alignItems:'center'}}>
-                        <Text style={{fontSize:25,marginBottom:9,color:'#ff6347',fontFamily: "Montserrat-Medium"}}>Order Placed</Text>
-                        <Image source={require('../../images/os.gif')} style={{width:width,height:width}} />
-                    </View>
                 }
             </ScrollView>
+            :
+            <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
+                <Text style={{color:'#ff6347',fontSize:19}} >No Items To Order !</Text>
+                <Text style={{color:'gray',fontSize:19,marginTop:2.5}}>Increase The Quantity of Products</Text>
+            </View>
             }
         </View>
     )

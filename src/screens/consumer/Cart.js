@@ -73,8 +73,10 @@ function Cart(props) {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
-            if(res.data!==data && res.data.length>0){
-                setData(res.data)
+            console.log(res.data,data)
+            if(res.data!==data){
+                if(res.data.length>0){
+                    setData(res.data)
                 setTotal(res.data[0].cart_total)
                 const arr = groupBy(res.data,'shop_id')
                 console.log(arr)
@@ -84,9 +86,16 @@ function Cart(props) {
                 setDict(arr)
                 SetSids(a);
                 setLoading(false)
+                } else {
+                    setTotal(0);
+                setData([])
+                SetSids([]);
+                setLoading(false)
+                }
             } else {
                 setTotal(0);
                 setData([])
+                SetSids([]);
                 setLoading(false)
             }
         })
@@ -108,11 +117,14 @@ function Cart(props) {
                         data={dict[i]}
                         renderItem={({item,index}) => <CartProduct item={item} token={token} changeTotal={changeTotal} /> }
                     />
-                <TouchableWithoutFeedback onPress={() => props.navigation.push('OrderSummary',{order:dict[i]})}>
+                {
+                    dict[i][0].quantity>0 &&
+                    <TouchableWithoutFeedback onPress={() => props.navigation.push('OrderSummary',{order:dict[i]})}>
                     <View style={{marginTop:5,padding:9,borderRadius:9,alignItems:'center',backgroundColor:"#ff6347"}}>
                         <Text style={{fontSize:19,color:'white'}}>Order From {dict[i][0].shop_name}</Text>
                     </View>
                 </TouchableWithoutFeedback>
+                }
             </View>
         )
     })
@@ -147,7 +159,7 @@ function Cart(props) {
                 :
                 <ScrollView style={{backgroundColor:'white',flex:1}}>
                     <View style={{marginLeft:15,marginTop:9,paddingBottom:9,marginRight:15,borderBottomWidth:0.75,borderColor:'#ff6347'}}>
-                        <Text style={{fontSize:21.5}}>Cart Total : Rs {total}</Text>
+                        <Text style={{fontSize:21.5,color:'#ff6347',fontWeight:'bold'}}>Cart Total : Rs {total}</Text>
                     </View>
                     {makeList}
                     {/* <FlatList
