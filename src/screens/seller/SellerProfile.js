@@ -215,6 +215,11 @@ function SellerProfile(props) {
                 //     let fcm = await AsyncStorage.read(fcmToken)
                 //     console.log("fcm" , fcm);
                 //  }
+                    const fcmToken = await messaging().getToken();
+                    if (fcmToken) {
+                       console.log(fcmToken);
+                    } 
+                   
 
                 console.log("HELLo");
 
