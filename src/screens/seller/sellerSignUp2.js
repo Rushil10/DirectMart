@@ -1,6 +1,7 @@
 import React, { Component , useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity} from 'react-native';
+import { Text , View , Dimensions,ScrollView , StyleSheet , Image , TextInput , TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 import Navbar from '../../components/Navbar'
+import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -15,9 +16,44 @@ function SellerSignUp2 (props) {
     const [time , setTime] = useState("");
     const [id , setId] = useState("");
 
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
+
+    const goToSignup3 = () => {
+        if(add.length === 0 || num.length === 0 || desc.length===0){
+            setHeading('Invalid Credential')
+            setError('Shop Address , Contact Number and Shop Description must Not be empty !')
+            showErr(true)
+        } else if(num.length>10 || num.length<10){
+            setHeading('Invalid Phone Number')
+            setError('Contact Number must be of 10 digits !')
+            showErr(true)
+        } else {
+            props.navigation.navigate("SellerSignUp3" , {
+                sname : props.route.params.sname,
+                oname : props.route.params.oname,
+                uname : props.route.params.uname,
+                pass  : props.route.params.pass ,
+                rpass : props.route.params.rpass,
+                add   : add ,
+                num   : num ,
+                desc  : desc,
+                time  : time,
+                id    : id ,
+            })
+        }
+    }
+
     return (
-        <View style={{flex: 1}}>
-            <View>
+        <ScrollView style={{flex: 1}}>
+           <KeyboardAvoidingView>
+           <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
+           <View>
             <Image
               style={{
                 height: windowHeight*0.08,
@@ -33,7 +69,9 @@ function SellerSignUp2 (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Shop Address</Text>
                 <View>
                     <TextInput 
-                        style={styles.input}
+                    numberOfLines={3}
+                    multiline={true}
+                    style={styles.input}
                         onChangeText={(text) => {
                             setAdd(text)
                         }}
@@ -58,13 +96,16 @@ function SellerSignUp2 (props) {
             <View style={{marginTop: 20}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Description of Shop</Text>
                 <View>
-                    <TextInput 
+                    <TextInput
+                    keyboardType='number-pad'
+                    numberOfLines={5} 
+                    multiline={true}
                         style={styles.input}
                         onChangeText={(text) => {
                             setDesc(text)
                         }}
                         value={desc}
-                        placeholder="Description of Shop" 
+                        placeholder="Description of Your Shop" 
                     /> 
                 </View>
             </View>
@@ -95,20 +136,7 @@ function SellerSignUp2 (props) {
                 </View>
             </View>
            <View style={{alignItems: "center" , marginTop: 15}}>
-                <TouchableOpacity style={styles.submit} onPress={() => {
-                    props.navigation.navigate("SellerSignUp3" , {
-                        sname : props.route.params.sname,
-                        oname : props.route.params.oname,
-                        uname : props.route.params.uname,
-                        pass  : props.route.params.pass ,
-                        rpass : props.route.params.rpass,
-                        add   : add ,
-                        num   : num ,
-                        desc  : desc,
-                        time  : time,
-                        id    : id ,
-                    })
-                }}>
+                <TouchableOpacity style={styles.submit} onPress={goToSignup3}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                          Next
                      </Text>
@@ -132,8 +160,9 @@ function SellerSignUp2 (props) {
               source={require('../../../assets/loginImages/AngleBottomRight.png')}
             />
             </View>
+           </KeyboardAvoidingView>
 
-        </View>
+        </ScrollView>
     );
 }
 
@@ -156,7 +185,6 @@ const styles = StyleSheet.create({
     fontSize: windowWidth*0.035 , fontFamily: "Montserrat-Bold" , color: "#7c7c7c"
   },
   input: {
-    height: windowHeight*0.05,
     width: windowWidth*0.8,
     marginLeft: windowWidth*0.1 ,
     marginTop: 8,
@@ -164,7 +192,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: "#7c7c7c",
     fontFamily: "Montserrat-Light",
-    padding: 10
+    padding: 10,
+    textAlignVertical:'top'
   },
   bootombar: {
     width: windowWidth*0.8, 
