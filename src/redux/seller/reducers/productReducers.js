@@ -1,4 +1,4 @@
-import { FETCH_PRODUCTS , ADD_PRODUCTS} from "../types";
+import { FETCH_PRODUCTS , ADD_PRODUCTS , UPDATE_PRODUCT} from "../types";
 
 const initialState = {
     products:[],
@@ -9,6 +9,7 @@ const initialState = {
 export default function(state=initialState,action) {
 
     console.log("ACCESSING THIS REDUCER");
+    console.log("ACTION" , action);
 
     switch (action.type){
         case FETCH_PRODUCTS:
@@ -22,6 +23,17 @@ export default function(state=initialState,action) {
                 products:[
                     action.product,
                     ...state.products
+                ]
+            }
+        case UPDATE_PRODUCT: 
+        let newArray = state.products.filter((obj) => 
+            obj.product_id !== action.product.product_id
+            ) 
+            return {
+                ...state,
+                products : [
+                    ...newArray,
+                    action.item
                 ]
             }
         default:

@@ -22,8 +22,12 @@ function productsList({item , navigation}) {
                     </View>
                     <View style={styles.mid}>
                         <View style={{justifyContent: "center"}}>
-                            <Text style={styles.text}>Name : {item.item.product_name}</Text>
-                            <Text style={styles.text}>Price : {item.item.product_price}</Text>
+                            <Text style={styles.text}>Name</Text>
+                            <Text style={styles.text1}>{item.item.product_name}</Text>
+                            <Text style={styles.text}>Price</Text>
+                            <Text style={styles.text1}>₹ {item.item.product_price}</Text>
+                            <Text style={styles.text}>Quantity</Text>
+                            <Text style={styles.text1}>{item.item.product_quantity}</Text>
                         </View>
                     </View>
                 </View>
@@ -53,7 +57,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: "Montserrat-Bold",
-        color: "#0ae38c"
+        color: "black"
     },
     mid: {
         flex: 0.5,
@@ -65,7 +69,11 @@ const styles = StyleSheet.create({
         flex: 0.4,
         justifyContent: "center",
         alignItems: "center"
-    }
+    },text1: {
+        marginLeft: 15,
+        fontFamily: "Montserrat-Bold",
+        color: "#0ae38c"
+    },
   });
 
 export default productsList;

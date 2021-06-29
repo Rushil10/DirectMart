@@ -1,7 +1,7 @@
 import { url } from "../../../api/api"
 import axios from "axios"
 import { AsyncStorage } from "react-native"
-import { FETCH_PRODUCTS , ADD_PRODUCTS } from "../types"
+import { FETCH_PRODUCTS , ADD_PRODUCTS , UPDATE_PRODUCT } from "../types"
 
 export const fetchProducts = () => async dispatch => {
     console.log("Comming for redux"); 
@@ -42,3 +42,24 @@ export const addProducts = (products) => async dispatch => {
     })
 }
 
+export const updateProducts = (products) => async dispatch => {
+    console.log("1234567890"); 
+    console.log(products);
+    var token = await AsyncStorage.getItem('shop_token');
+
+    axios.post(`${url}/shop/product/${products.product_id}`, products , {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+        })
+    .then(async(res) => {
+        console.log("response");
+        console.log(res.data);
+        console.log("1234567890"); 
+        dispatch({type:UPDATE_PRODUCT,product: products})
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}

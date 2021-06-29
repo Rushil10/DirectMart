@@ -61,7 +61,7 @@ function ProductsScreen(props) {
     }
 
     return (
-        <View style={{flex:1 , backgroundColor: "white"}}>
+        <View style={{flex:1 , backgroundColor: "white" , marginBottom: 60}}>
             <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}}  backgroundColor='#0ae38c' header='Seller' height={55} width={width} />
             {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />

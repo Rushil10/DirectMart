@@ -21,13 +21,15 @@ function generateString(length) {
 }
 
 function AddProducts (props) {
+
+    let imgNew = ""
     
     const [name , setName] = useState("");
     const [price , setPrice] = useState("");
     const [qty , setQty] = useState("");
     const [description , setDescription] = useState("");
     const [path,setPath] = React.useState(null);
-    const [img , setImg] = useState("")
+    const [img , setImg] = useState(null)
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState(null);
@@ -57,10 +59,14 @@ function AddProducts (props) {
             
             const name = generateString(9);
             let reference = storage().ref(name);
+            console.log("URL");
             await reference.putFile(path[0].uri)
             let url = await reference.getDownloadURL();
-            setImg(url);
+            await setImg(url);
+            console.log("*");
             console.log(url);
+            imgNew = url;
+            console.log("*");
         } else {
             console.log("No image");
         }
@@ -69,15 +75,22 @@ function AddProducts (props) {
     const submitHandler = async() => {
         setLoading(true);
         await uploadImageToFirebase();
+
+        console.log(")(()()()+_-");
+
+        console.log(imgNew);
+
         let product = {
             product_name: name,
             product_price: price,
             product_quantity: qty, 
             product_description: description,
-            product_image: img,
+            product_image: imgNew,
             product_type: value
         }
 
+        console.log("$$$$$$$$$$$$$$$$");
+        console.log(product);
         var token = await AsyncStorage.getItem('shop_token');
         console.log(token);
 

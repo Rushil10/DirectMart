@@ -59,7 +59,7 @@ function SellerScreen(props) {
             {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
                 </View>  : 
-            <View style={{alignItems: "center" , marginBottom : 10}}>
+            <View style={{alignItems: "center" , marginBottom : 60}}>
                 <FlatList 
                     data={products}
                     renderItem={renderItem}

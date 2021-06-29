@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "628527507166",
+    "project_id": "shopy-a88eb",
+    "storage_bucket": "shopy-a88eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628527507166:android:e28631a762465d558fc44f",
+        "android_client_info": {
+          "package_name": "com.extension"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628527507166-tbjs8ps5j7likofv3qk8drtqt59rsv6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.extension",
+            "certificate_hash": "22ca62b4607b57b435f1e429cdc2591df659383f"
+          }
+        },
+        {
+          "client_id": "628527507166-se3h158d8m3ul8456lq8sbqnom6dkitg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYn23hD0oQe55zG_QvCxgcvNp8C2QPlwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628527507166-se3h158d8m3ul8456lq8sbqnom6dkitg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

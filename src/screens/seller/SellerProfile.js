@@ -7,6 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Header from '../consumer/ConsumerComponents/Header';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Share from 'react-native-share'
+import messaging from '@react-native-firebase/messaging';
 import ImgToBase64 from 'react-native-image-base64';
 
 const windowWidth = Dimensions.get('window').width;
@@ -201,8 +202,49 @@ function SellerProfile(props) {
             
                     <View style={{flexDirection : "column" , alignItems: "center" , justifyContent: "center" , marginTop: 10 , marginBottom: 10}}>
 
-            <TouchableOpacity  onPress={() => {
-                 console.log(props);
+            <TouchableOpacity  onPress={async () => {
+
+
+                 
+                //  const e = await messaging().hasPermission();
+
+                //  console.log("e" , e);
+
+                //  if(e)
+                //  {
+                //     let fcm = await AsyncStorage.read(fcmToken)
+                //     console.log("fcm" , fcm);
+                //  }
+                    const fcmToken = await messaging().getToken();
+                    if (fcmToken) {
+                       console.log(fcmToken);
+                    } 
+                   
+
+                console.log("HELLo");
+
+
+                messaging().onNotificationOpenedApp(remoteMessage => {
+                    console.log(
+                      'Notification caused app to open from background state:',
+                      remoteMessage.notification,
+                    );
+                    navigation.navigate(remoteMessage.data.type);
+                  });
+              
+                  // Check whether an initial notification is available
+                  messaging()
+                    .getInitialNotification()
+                    .then(remoteMessage => {
+                      if (remoteMessage) {
+                        console.log(
+                          'Notification caused app to open from quit state:',
+                          remoteMessage.notification,
+                        );
+                        setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+                      }
+                    });
+
                 }}>
                 <View style={styles.submit2}>
                 <MaterialCommunityIcons name="pencil-outline" color={"white"} size={24} />

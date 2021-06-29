@@ -4,6 +4,8 @@ import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOp
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { updateProducts } from '../../redux/seller/actions/productActions';
+import { connect } from 'react-redux';
 import url from '../../api/api'
 
 const windowWidth = Dimensions.get('window').width;
@@ -22,6 +24,7 @@ function generateString(length) {
 
 function ProductDetails (props) {
     
+    const [id , setId] = useState("");
     const [name , setName] = useState("");
     const [price , setPrice] = useState("");
     const [qty , setQty] = useState("");
@@ -39,6 +42,8 @@ function ProductDetails (props) {
 
      const fetchProductDetails = (product) => {
 
+        console.log("&*^" , product);
+        setId(product.product_id);
         setPrice(product.product_price.toString()); 
         setName(product.product_name);
         console.log("******");
@@ -48,6 +53,23 @@ function ProductDetails (props) {
         // setItems({label: product.product_type})
      }
 
+    const editHandler = () => {
+        let product = {
+            product_id: id,
+            product_name: name,
+            product_price: price,
+            product_quantity: qty, 
+            product_description: description,
+            product_image: img,
+            product_type: value,
+            product_increase_quantity: 0,
+            product_decrease_quantity: 0
+        }
+
+        props.updateProducts(product)
+
+
+    }
 
     useEffect(() => {
         setLoading(true)
@@ -185,9 +207,11 @@ function ProductDetails (props) {
     
 
     <View style={{alignItems: "center" , marginTop: 15}}>
-            <TouchableOpacity style={styles.submit} onPress={() => {}}>
+            <TouchableOpacity style={styles.submit} onPress={() => {
+                editHandler()
+            }}>
                  <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
-                     Save Product
+                     Save Changes
                  </Text>
             </TouchableOpacity>
         </View>  
@@ -257,4 +281,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductDetails;
+const mapStateToProps = (state) => {
+    return{
+        products : state.sproducts.products
+    }
+}
+
+const mapDispatchToProps = { 
+    updateProducts
+}
+
+export default connect(mapStateToProps , mapDispatchToProps)(ProductDetails);

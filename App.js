@@ -1,5 +1,7 @@
 // In App.js in a new project
-
+import PushNotification from "react-native-push-notification";
+import { Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -316,6 +318,20 @@ function MainStackScreens() {
 
 
 function App() {
+
+  React.useEffect(() => {
+
+    console.log("App useeffect");
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    console.log(unsubscribe); 
+
+    return unsubscribe;
+  }, []);
+  
 
   const linking = {
     prefixes: ['localapp://'],

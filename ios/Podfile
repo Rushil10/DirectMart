@@ -18,4 +18,6 @@ target 'localApp' do
   #     flipper_post_install(installer)
   #   end
   # end
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
 end
