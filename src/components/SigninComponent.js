@@ -7,6 +7,8 @@ import {url} from '../api/api'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import messaging from '@react-native-firebase/messaging';
+import jwtDecode from 'jwt-decode';
 
 class SigninComponent extends Component {
 
@@ -32,10 +34,27 @@ class SigninComponent extends Component {
         console.log(res.data);
         var token = res.data.token;
         await AsyncStorage.setItem('shop_token',token);
-        this.props.signIn.reset({
-          index: 0,
-          routes: [{name: 'Seller'}],
-      });
+        const fcm_token = await messaging().getToken();
+      console.log(fcm_token)
+      var shop = jwtDecode(token);
+      var data = {
+          user_type:'shop',
+          user_id:shop.shop_id,
+          fcm_token:fcm_token
+      }
+      console.log(data);
+      console.log(token);
+      axios.post(`${url}/shop/fcmtoken`,data,{
+          headers:{
+              Authorization: `Bearer ${token}`
+          }
+      }).then(res => {
+          console.log(res.data);
+          this.props.signIn.reset({
+            index: 0,
+            routes: [{name: 'Seller'}],
+        });
+      })
     })
     .catch(err => {
         console.log(err);
@@ -53,6 +72,7 @@ class SigninComponent extends Component {
        email: "",
        pass: ""
      };
+
   render() {
     return (
 

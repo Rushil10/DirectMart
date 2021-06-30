@@ -21,9 +21,12 @@ function ShopCard({item}) {
                     </View>
                 </View>
             </View>
-            <View style={{marginTop:9}}>
-                <Text style={{fontSize:15}}>Shop Description, This will be a description of the shop.</Text>
+            {
+                item.shop_description &&
+                <View style={{marginTop:9}}>
+                <Text numberOfLines={2} style={{fontSize:15}}>{item.shop_description}</Text>
             </View>
+            }
             </View>
         </TouchableWithoutFeedback>
     )

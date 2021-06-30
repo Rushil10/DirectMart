@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
 import { setLocation } from '../../redux/consumer/actions/latlngactions';
 import ErrorModal from './ConsumerComponents/ErrorModal';
+import messaging from '@react-native-firebase/messaging';
+import jwtDecode from 'jwt-decode';
 
 const {height,width} = Dimensions.get('window')
 function ConsumerSignup2(props) {
@@ -142,12 +144,33 @@ function ConsumerSignup2(props) {
             }).then (async(resp) => {
                 console.log(resp.data)
                 await AsyncStorage.setItem('user_token',resp.data.token)
+                await setFcmToken(resp.data.token)
                 setCll(false);
                 props.navigation.reset({
                     index: 0,
                     routes: [{name: 'Consumer'}],
                 });
             })
+        })
+    }
+
+    const setFcmToken = async(token) => {
+        const fcm_token = await messaging().getToken();
+        console.log(fcm_token)
+        var consumer = jwtDecode(token);
+        var data = {
+            user_type:'consumer',
+            user_id:consumer.consumer_id,
+            fcm_token:fcm_token
+        }
+        console.log(data);
+        console.log(token);
+        axios.post(`${url}/consumer/fcmtoken`,data,{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        }).then(res => {
+            console.log(res.data);
         })
     }
 

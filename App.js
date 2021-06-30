@@ -53,6 +53,7 @@ import OrderSummary from './src/screens/consumer/OrderSummary';
 import AddAddress from './src/screens/consumer/AddAddress';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ConsumerSearch from './src/screens/consumer/ConsumerSearch';
+import ConsumerProductDetails from "./src/screens/consumer/ProductDetails";
 
 
 
@@ -170,6 +171,7 @@ function NearbyShopss() {
     }}>
       <NearbyShopStack.Screen name="allShops" component={NearbyShops} />
       <NearbyShopStack.Screen name="ShopProducts" component={ShopProducts} />
+      <NearbyShopStack.Screen name="ProductDetails" component={ConsumerProductDetails} />
     </NearbyShopStack.Navigator>
   )
 }

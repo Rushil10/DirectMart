@@ -10,6 +10,8 @@ import { setLocation } from '../../redux/consumer/actions/latlngactions';
 import jwt_decode from "jwt-decode";
 import { setCartProducts } from '../../redux/consumer/actions/cartActions';
 import ErrorModal from './ConsumerComponents/ErrorModal';
+import messaging from '@react-native-firebase/messaging';
+import jwtDecode from 'jwt-decode';
 
 const {height,width} = Dimensions.get('window')
 function ConsumerSignin(props) {
@@ -64,6 +66,7 @@ function ConsumerSignin(props) {
                     var token = res.data.token;
                 var decodedToken = jwt_decode(token);
                 await AsyncStorage.setItem('user_token',token);
+                await setFcmToken(token);
                 props.setLocation(decodedToken.latitude,decodedToken.longitude);
                 props.setCartProducts(token);
                 setLoading(false);
@@ -87,6 +90,26 @@ function ConsumerSignin(props) {
             })
 
         }
+    }
+
+    const setFcmToken = async(token) => {
+        const fcm_token = await messaging().getToken();
+        console.log(fcm_token)
+        var consumer = jwtDecode(token);
+        var data = {
+            user_type:'consumer',
+            user_id:consumer.consumer_id,
+            fcm_token:fcm_token
+        }
+        console.log(data);
+        console.log(token);
+        axios.post(`${url}/consumer/fcmtoken`,data,{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        }).then(res => {
+            console.log(res.data);
+        })
     }
 
     const goToSignup = () => {

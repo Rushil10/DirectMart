@@ -42,10 +42,10 @@ function ProductCard({item,token,addToCart,removeFromCart}) {
     }
 
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => navigation.push('ProductDetails',{product:item})}>
             <View style={{marginLeft:7.5,marginRight:7.5,padding:15,borderBottomWidth:0.5,marginBottom:5,borderColor:'#101010'}}>
             <View style={{flexDirection:'row'}}>
-                <Image source={{uri:item.product_image}} resizeMode='contain' style={{height:width/3.25,width:width/3.25,borderRadius:15,marginRight:15}} />
+                <Image source={{uri:item.product_image[0]}} resizeMode='contain' style={{height:width/3.25,width:width/3.25,borderRadius:15,marginRight:15}} />
                 <View style={{paddingTop:9,flex:1}}>
                     <Text numberOfLines={2} style={{fontSize:21,color:'#101010',fontFamily:'Montserrat-medium',textTransform:'capitalize'}}>{item.product_name}</Text>
                     <Text style={{fontSize:16.5,marginLeft:0,paddingTop:5,textTransform:'capitalize'}}>Price Rs: {item.product_price}</Text>
