@@ -1,6 +1,6 @@
 import * as React from 'react';
 import axios from 'axios'
-import { View, Text, AsyncStorage,FlatList,ScrollView,Dimensions,Image ,TouchableOpacity,TouchableWithoutFeedback} from 'react-native';
+import { View, Text, AsyncStorage,FlatList,BackHandler,ScrollView,Dimensions,Image ,TouchableOpacity,TouchableWithoutFeedback} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native';
 import { url } from '../../api/api';
@@ -57,6 +57,19 @@ function ConsumerProductDetails(props) {
         })
     }
 
+    const getProductDetails = async() => {
+        const id = props.route.params.product_id
+        var token = await AsyncStorage.getItem('user_token')
+        axios.get(`${url}/consumer/product/${id}`,{
+            headers:{
+                Authorization : `Bearer ${token}`
+            }
+        }).then((res) => {
+            console.log(res.data);
+            setProduct(res.data[0])
+            setLoading(false)
+        })
+    }
 
     React.useEffect(() => {
         //console.warn(index);
@@ -65,10 +78,32 @@ function ConsumerProductDetails(props) {
     }, [index]);
 
     React.useEffect(() => {
-        var product = props.route.params.product
-        setProduct(product);
-        setLoading(false);
-    })
+        if(props.route.params.product_id){
+            getProductDetails()
+        } else {
+            var product = props.route.params.product
+            setProduct(product);
+            setLoading(false);
+        }
+    },[])
+
+    React.useEffect(() => {
+        const backAction = () => {
+        if(props.route.params.product_id){
+            props.navigation.replace('allShops')
+        } else {
+            props.navigation.pop()
+        }
+        return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+        );
+    
+        return () => backHandler.remove();
+    }, []); 
 
     const [quantity,setQuantity] = React.useState(0);
 
