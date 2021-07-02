@@ -57,7 +57,7 @@ const renderItem = ({item}) => {
                     <View style={{marginLeft: 15 , flexDirection: "row"}}>
                         <View>
                             <Image 
-                                source={{uri : item.product_image}}
+                                source={{uri : item.product_image[0]}}
                                 style= {{height: 40 , width: 40 , marginRight: 10}}
                             />
                         </View>

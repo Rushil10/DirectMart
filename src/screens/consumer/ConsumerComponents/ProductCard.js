@@ -42,7 +42,7 @@ function ProductCard({item,token,addToCart,removeFromCart}) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() => navigation.push('ProductDetails',{product:item})}>
+        <TouchableWithoutFeedback onPress={() => navigation.push('ProductDet',{product:item})}>
             <View style={{marginLeft:7.5,marginRight:7.5,padding:15,borderBottomWidth:0.5,marginBottom:5,borderColor:'#101010'}}>
             <View style={{flexDirection:'row'}}>
                 <Image source={{uri:item.product_image[0]}} resizeMode='contain' style={{height:width/3.25,width:width/3.25,borderRadius:15,marginRight:15}} />

@@ -41,7 +41,7 @@ function LoadingScreen(props) {
                                 name:'shops',
                                 state:{
                                     routes:[{
-                                        name:'ProductDetails',
+                                        name:'ProductDet',
                                         params:{
                                             product_id:id
                                         }

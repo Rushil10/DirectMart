@@ -16,7 +16,7 @@ function productsList({item , navigation}) {
                         <View style={{}}>
                             <Image
                                 style={{height: height*0.15 , width: width*0.3 , marginLeft: 10}}
-                                source={{uri: item.item.product_image}}
+                                source={{uri: item.item.product_image[0]}}
                             />
                         </View>
                     </View>

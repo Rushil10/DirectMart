@@ -83,6 +83,19 @@ const SellerOverViewStack = createStackNavigator();
 
 const SellerTopTabsStack = createStackNavigator();
 
+const CSearchStack = createStackNavigator();
+
+function Csearch() {
+  return (
+    <CSearchStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
+      <CSearchStack.Screen name="searchPro" component={ConsumerSearch} />
+      <CSearchStack.Screen name="ProductDet" component={ConsumerProductDetails} />
+    </CSearchStack.Navigator>
+  )
+}
+
 
 function SOS() {
   return (
@@ -171,7 +184,7 @@ function NearbyShopss() {
     }}>
       <NearbyShopStack.Screen name="allShops" component={NearbyShops} />
       <NearbyShopStack.Screen name="ShopProducts" component={ShopProducts} />
-      <NearbyShopStack.Screen name="ProductDetails" component={ConsumerProductDetails} />
+      <NearbyShopStack.Screen name="ProductDet" component={ConsumerProductDetails} />
     </NearbyShopStack.Navigator>
   )
 }
@@ -274,7 +287,7 @@ function ConsumerStackScreens() {
           tabBarIcon: ({ color, size }) => (
             <Icon2 name="search" color={color} size={25} />
           ),
-        }} name="search" component={ConsumerSearch} />
+        }} name="search" component={Csearch} />
         <ConsumerStack.Screen options={{
           tabBarLabel: 'Shops',
           tabBarIcon: ({ color, size }) => (
