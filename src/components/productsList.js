@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 const {height,width} = Dimensions.get('window')
 
 function productsList({item , navigation}) {
-    // console.log(item);
     return(
         <View>
             <TouchableOpacity onPress={navigation}>
@@ -39,15 +38,14 @@ function productsList({item , navigation}) {
 const styles = StyleSheet.create({
     renderItem: {
         flex: 1,
-        height: height*0.2 , 
-        width: width*0.95 ,  
+        height: height*0.35 , 
+        width: width*0.45 ,  
         margin: 8 , 
         backgroundColor: "white",
         borderRadius: 20 ,
         borderWidth: 1.5 , 
-        borderColor: "#0ae38c" ,
-        flexDirection: "row"
-    },
+        borderColor: "#0ae38c" 
+        },
     upper: {
         flex: 0.5,
         // backgroundColor: "orange",
@@ -63,7 +61,8 @@ const styles = StyleSheet.create({
         flex: 0.5,
         flexDirection: "row",
         borderRadius: 20,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        marginLeft: 20
     },
     bottom: {
         flex: 0.4,

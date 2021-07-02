@@ -60,14 +60,15 @@ function ProductDetails (props) {
             product_price: price,
             product_quantity: qty, 
             product_description: description,
-            product_image: img,
+            product_image: [img],
             product_type: value,
-            product_increase_quantity: 0,
-            product_decrease_quantity: 0
+            increase_quantity: 0,
+            decrease_quantity: 0
         }
 
         props.updateProducts(product)
 
+        props.navigation.navigate("Seller")
 
     }
 

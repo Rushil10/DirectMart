@@ -60,6 +60,30 @@ export const orderReadyForDelivery = (item) => async dispatch => {
 
     console.log("IAMHERE_+_++_+_+_+_+_+_+_+_++__+_+_+_+_");
 
+    axios.post(`${url}/notify`, {
+        title: "Order ready for delivery/Pickup",
+        body: "Your Order of " + item.tota + " rupees is ready for delivery/Pickup you can check the further status on the app ",
+        user_id: item.consumer_id,
+        user_type: "consumer",
+        data: { type: "data is here :)"}
+    } , {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+        })
+    .then(async(res) => {
+        console.log("))))))))))))))))))))))))))))))))");
+        console.log("Notification Sent");
+        console.log("res" , res);
+    })
+    .catch(err => {
+        console.log("((((((((((((((((((((((((((((((((((");
+        console.log("Notification not Sent");
+        console.log(err);
+    })
+
+
     axios.post(`${url}/order/${item.order_cart_id}`, {
         type: "OutForDelivery"
     } , {
@@ -78,8 +102,12 @@ export const orderReadyForDelivery = (item) => async dispatch => {
     })
     .catch(err => {
         console.log("((((((((((((((((((((((((((((((((((");
+        console.log("Status not updated");
         console.log(err);
     })
+
+
+
 }
 
 export const orderDelivered = (item) => async dispatch => {
@@ -87,6 +115,29 @@ export const orderDelivered = (item) => async dispatch => {
     var token = await AsyncStorage.getItem('shop_token');
 
     console.log("IAMHERE_+_++_+_+_+_+_+_+_+_++__+_+_+_+_");
+
+    axios.post(`${url}/notify`, {
+        title: "Order Completed",
+        body: "Your Order of " + item.tota + " rupees is delivered/picked up if not you can contact to shop owner via app ",
+        user_id: item.consumer_id,
+        user_type: "consumer",
+        data: { type: "data is here :)"}
+    } , {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+        })
+    .then(async(res) => {
+        console.log("))))))))))))))))))))))))))))))))");
+        console.log("Notification Sent");
+        console.log("res" , res);
+    })
+    .catch(err => {
+        console.log("((((((((((((((((((((((((((((((((((");
+        console.log("Notification not Sent");
+        console.log(err);
+    })
 
     axios.post(`${url}/order/${item.order_cart_id}`, {
         type: "Delivered"

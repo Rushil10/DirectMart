@@ -61,7 +61,7 @@ function ProductsScreen(props) {
     }
 
     return (
-        <View style={{flex:1 , backgroundColor: "white" , marginBottom: 60}}>
+        <View style={{flex:1 , backgroundColor: "white" }}>
             <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}}  backgroundColor='#0ae38c' header='Seller' height={55} width={width} />
             {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
@@ -75,11 +75,12 @@ function ProductsScreen(props) {
                 </View>
             </TouchableOpacity>
             
-            <View style={{marginTop: 10 , alignItems: "center" , marginBottom : height*0.17}}>
+            <View style={{marginTop: 10 , alignItems: "center" , marginBottom : height*0.25}}>
                 <FlatList 
                     data={products}
                     renderItem={renderItem}
                     keyExtractor={item => item.product_id}
+                    numColumns={2}
                 />
             </View> 
 
@@ -95,9 +96,8 @@ function ProductsScreen(props) {
 const styles = StyleSheet.create({
     renderItem: {
         flex: 1,
-        height: height*0.28 , 
+        // height: height*0.28 , 
         width: width*0.95 ,  
-        margin: 8 , 
         backgroundColor: "white",
         borderRadius: 20 ,
         borderWidth: 1.5 , 
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     upper: {
         flex: 0.3,
         // backgroundColor: "orange",
-        borderRadius: 20,
+        borderRadius: 10,
         justifyContent: "center"
     },
     text: {
@@ -114,8 +114,7 @@ const styles = StyleSheet.create({
     },
     mid: {
         flex: 0.3,
-        flexDirection: "row",
-        borderRadius: 20
+        flexDirection: "row"
     },
     bottom: {
         flex: 0.4,
