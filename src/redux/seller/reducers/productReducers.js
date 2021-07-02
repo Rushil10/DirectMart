@@ -32,8 +32,8 @@ export default function(state=initialState,action) {
             return {
                 ...state,
                 products : [
-                    ...newArray,
-                    action.item
+                    action.product,
+                    ...newArray
                 ]
             }
         default:
