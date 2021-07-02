@@ -13,6 +13,7 @@ import OrderSummaryProduct from './ConsumerComponents/OrderSummaryProduct';
 import RNUpiPayment from 'react-native-upi-pay';
 import { setDeliveredOrders, setOutForDeliveryOrders,setCurrentOrders } from '../../redux/consumer/actions/orders';
 import { setCartProducts } from '../../redux/consumer/actions/cartActions';
+import QuantityModal from './ConsumerComponents/InsufficientQuantityModal';
 
 const {height,width} = Dimensions.get('window')
 
@@ -24,6 +25,9 @@ function OrderSummary(props) {
     const [consumer,setConsumer] = React.useState([])
     const [loading,setLoading] = React.useState(true)
     const [orderDone,setOrderDone] = React.useState(false);
+    const [err,showErr] = React.useState(false)
+    const [errmsg,setErrmsg] = React.useState('')
+    const [errimg,setErrimg] = React.useState('')
 
     const setData = async() => {
         setLoading(true)
@@ -84,12 +88,36 @@ function OrderSummary(props) {
             }
         }).then(res => {
             console.log(res.data);
-            setOrderDone(true);
-            props.setCartProducts(token);
-            props.setCurrentOrders(token);
-            props.setOutForDeliveryOrders(token);
-            props.setDeliveredOrders(token)
+            if(!res.data.message){
+                setOrderDone(true);
+                props.setCartProducts(token);
+                props.setCurrentOrders(token);
+                props.setOutForDeliveryOrders(token);
+                props.setDeliveredOrders(token)
+                var notify = {
+                    title:'New Order Placed',
+                    message:`Order of Rs ${total} placed by ${consumer.consumer_name} on your shop !`,
+                    user_id:order[0].shop_id,
+                    user_type:'shop',
+                    data:{
+                        type:'New Order'
+                    }
+                }
+                axios.post(`${url}/notify`,notify).then(res => {
+                    console.log(res.data)
+                })
+            } else {
+                showErr(true);
+                setErrmsg(res.data.message)
+                var images = res.data.faulty.product_image
+                var image = images.split(',')
+                setErrimg(image[0])
+            }
         })
+    }
+
+    const closeErr = () => {
+        showErr(false)
     }
 
     const onPressCOD = () => {
@@ -119,6 +147,7 @@ function OrderSummary(props) {
                 :
                 order.length > 0 ?
                 <ScrollView style={{padding:15,flex:1,paddingBottom:55}}>
+                    <QuantityModal visible={err} message={errmsg} image={errimg} onClose={closeErr} />
                     {
                         orderDone &&
                         <View style={{marginTop:0,alignItems:'center',marginBottom:9}}>

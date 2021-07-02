@@ -5,7 +5,8 @@ import GetLocation from 'react-native-get-location'
 import axios from 'axios';
 import {url} from '../../api/api'
 import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
-
+import messaging from '@react-native-firebase/messaging';
+import jwtDecode from 'jwt-decode';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -61,6 +62,7 @@ function SellerSignUp (props) {
       console.log(res.data);
       var token = res.data.token;
       await AsyncStorage.setItem('shop_token', token)
+      await setFcmToken(token)
       props.navigation.reset({
         index: 0,
         routes: [{name: 'Seller'}],
@@ -73,6 +75,26 @@ function SellerSignUp (props) {
                       setLoader(false)
     }
   }
+
+  const setFcmToken = async(token) => {
+    const fcm_token = await messaging().getToken();
+    console.log(fcm_token)
+    var shop = jwtDecode(token);
+    var data = {
+        user_type:'shop',
+        user_id:shop.shop_id,
+        fcm_token:fcm_token
+    }
+    console.log(data);
+    console.log(token);
+    axios.post(`${url}/shop/fcmtoken`,data,{
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+    }).then(res => {
+        console.log(res.data);
+    })
+}
 
     return (
         <View style={{flex: 1}}>

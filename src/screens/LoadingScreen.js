@@ -30,30 +30,54 @@ function LoadingScreen(props) {
                 var ids = url.split('/')
                 var id = ids[ids.length-1]
                 var name= ids[ids.length-2]
-                var shop = {
-                    shop_id:id,
-                    shop_name:name,
+                if(name==='product'){
+                    console.log('here')
+                    return props.navigation.dispatch({
+                        ...CommonActions.reset({
+                          index: 0,
+                          routes: [{ name: "Consumer",
+                        state:{
+                            routes:[{
+                                name:'shops',
+                                state:{
+                                    routes:[{
+                                        name:'ProductDet',
+                                        params:{
+                                            product_id:id
+                                        }
+                                    }]
+                                }
+                            }]
+                        } }]
+                        })
+                      });
+                } else {
+                    var shop = {
+                        shop_id:id,
+                        shop_name:name,
+                    }
+                    //return props.navigation.replace('Consumer',{screen:'shops',params:{screen:'allShops',params:{screen:'ShopProducts',params:{shop}}}})
+                    return props.navigation.dispatch({
+                        ...CommonActions.reset({
+                          index: 0,
+                          routes: [{ name: "Consumer",
+                        state:{
+                            routes:[{
+                                name:'shops',
+                                state:{
+                                    routes:[{
+                                        name:'ShopProducts',
+                                        params:{
+                                            shop:shop
+                                        }
+                                    }]
+                                }
+                            }]
+                        } }]
+                        })
+                      });
+
                 }
-                //return props.navigation.replace('Consumer',{screen:'shops',params:{screen:'allShops',params:{screen:'ShopProducts',params:{shop}}}})
-                return props.navigation.dispatch({
-                    ...CommonActions.reset({
-                      index: 0,
-                      routes: [{ name: "Consumer",
-                    state:{
-                        routes:[{
-                            name:'shops',
-                            state:{
-                                routes:[{
-                                    name:'ShopProducts',
-                                    params:{
-                                        shop:shop
-                                    }
-                                }]
-                            }
-                        }]
-                    } }]
-                    })
-                  });
                /*  return props.navigation.reset({
                     index: 2,
                     routes: [{name: 'Consumer'},{name:'shops'}],

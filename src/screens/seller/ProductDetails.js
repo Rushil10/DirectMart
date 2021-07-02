@@ -48,8 +48,8 @@ function ProductDetails (props) {
         setName(product.product_name);
         console.log("******");
         setQty(product.product_quantity.toString()); 
-        setImg(product.product_image)
-        setPath(product.product_image)
+        setImg(product.product_image[0])
+        setPath(product.product_image[0])
         // setItems({label: product.product_type})
      }
 

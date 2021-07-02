@@ -53,6 +53,7 @@ import OrderSummary from './src/screens/consumer/OrderSummary';
 import AddAddress from './src/screens/consumer/AddAddress';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ConsumerSearch from './src/screens/consumer/ConsumerSearch';
+import ConsumerProductDetails from "./src/screens/consumer/ProductDetails";
 
 
 
@@ -81,6 +82,19 @@ const CProfileStack = createStackNavigator();
 const SellerOverViewStack = createStackNavigator();
 
 const SellerTopTabsStack = createStackNavigator();
+
+const CSearchStack = createStackNavigator();
+
+function Csearch() {
+  return (
+    <CSearchStack.Navigator screenOptions={{
+      headerShown: false
+    }}>
+      <CSearchStack.Screen name="searchPro" component={ConsumerSearch} />
+      <CSearchStack.Screen name="ProductDet" component={ConsumerProductDetails} />
+    </CSearchStack.Navigator>
+  )
+}
 
 
 function SOS() {
@@ -170,6 +184,7 @@ function NearbyShopss() {
     }}>
       <NearbyShopStack.Screen name="allShops" component={NearbyShops} />
       <NearbyShopStack.Screen name="ShopProducts" component={ShopProducts} />
+      <NearbyShopStack.Screen name="ProductDet" component={ConsumerProductDetails} />
     </NearbyShopStack.Navigator>
   )
 }
@@ -272,7 +287,7 @@ function ConsumerStackScreens() {
           tabBarIcon: ({ color, size }) => (
             <Icon2 name="search" color={color} size={25} />
           ),
-        }} name="search" component={ConsumerSearch} />
+        }} name="search" component={Csearch} />
         <ConsumerStack.Screen options={{
           tabBarLabel: 'Shops',
           tabBarIcon: ({ color, size }) => (
@@ -315,13 +330,32 @@ function MainStackScreens() {
   )
 }
 
-
-
 function App() {
 
   React.useEffect(() => {
 
-    console.log("App useeffect");
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      //navigation.navigate(remoteMessage.data.type);
+    });
+
+    messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.notification,
+        );
+        //setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+      }
+      //setLoading(false);
+    });
+
+    /* console.log("App useeffect");
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
@@ -329,7 +363,7 @@ function App() {
 
     console.log(unsubscribe); 
 
-    return unsubscribe;
+    return unsubscribe; */
   }, []);
   
 
