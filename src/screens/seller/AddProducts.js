@@ -1,10 +1,12 @@
 import axios from "axios"
 import React, {useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage , ActivityIndicator} from 'react-native';
+import { Text , View , Dimensions,TouchableWithoutFeedback,FlatList , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage , ActivityIndicator} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/AntDesign'
 import url from '../../api/api'
+import ErrorModal from "../consumer/ConsumerComponents/ErrorModal";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -32,18 +34,54 @@ function AddProducts (props) {
     const [img , setImg] = useState(null)
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState('packaged');
+    const [pl,setPl] = React.useState(false);
+    const flatListRef =React.useRef(null);
     const [items, setItems] = useState([
-      {label: 'Type 1', value: '1'},
-      {label: 'Type 2', value: '2'},
-      {label: 'Type 3', value: '3'}
+      {label: 'Packaged', value: 'Packaged'},
+      {label: 'Clothing', value: 'Clothing'},
+      {label: 'Daily Needs', value: 'Daily Needs'},
+      {label: 'Others', value: 'Others'}
      ]);
+    const [mimages,setMimages] = React.useState([])
+    const [si,setSi] = React.useState(0);
+    const [index, setIndex] = React.useState(0);
+    const indexRef = React.useRef(index);
+    const [mloading,setMloading] = React.useState(false);
+    indexRef.current = index;
+    const onScroll = React.useCallback((event) => {
+        const slideSize = event.nativeEvent.layoutMeasurement.width;
+        const index = event.nativeEvent.contentOffset.x / slideSize;
+        const roundIndex = Math.round(index);
+        console.log(event.nativeEvent,'eventtt')
+        const distance = Math.abs(roundIndex - index);
+        const isNoMansLand = 0.4 < distance;
+
+        if (roundIndex !== indexRef.current && !isNoMansLand) {
+            setIndex(roundIndex);
+        }
+    }, []);
+
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
+
+    React.useEffect(() => {
+        //console.warn(index);
+        setIndex(index);
+        setSi(index)
+    }, [index]);
 
 
     const selectImage = () => {
         ImageCropPicker.openPicker({
             cropping:true
         }).then(image => {
+            setMloading(true);
             console.log(image);
             var [category, extension] = image.mime.split("/")
             console.log(category);
@@ -51,6 +89,10 @@ function AddProducts (props) {
              var media1 = { uri: image.path, width: image.width, height: image.height, mime:image.mime, type: category }
              media.push(media1)
              setPath(media)
+             var prev = mimages
+             prev.push(media)
+             setMimages(prev)
+             setMloading(false)
         })
     }
 
@@ -72,20 +114,58 @@ function AddProducts (props) {
         }
     }
 
-    const submitHandler = async() => {
+    const removeImage = async(index) => {
+        console.log('called ')
+        await setMloading(true)
+        var mim = mimages
+        mim.splice(index, 1)
+        setMimages(mim)
+        setMloading(false)
+    }
+
+    const uploadMultipleImages = async() => {
+        var images = []
+        if(name.length===0 || qty.length===0 || price.length===0 || description.length==0) {
+            setHeading('Insufficient Data')
+            setError('Name , Quantity , Price , Description and Type must Not be empty !')
+            showErr(true)
+        } else if(mimages.length===0){
+            setHeading('Upload Image')
+            setError('You must upload atleast 1 image !')
+            showErr(true)
+        } else if(value.length===0){
+            setHeading('Product Type')
+            setError('Product Type must not be empty !')
+            showErr(true)
+        } else {
+            setPl(true);
+            for(var i=0;i<mimages.length;i++){
+                const name = generateString(9);
+                console.log(name)
+                console.log(mimages[i][0].uri)
+                let reference = storage().ref(name.toString())
+                await reference.putFile(mimages[i][0].uri)
+                let url = await reference.getDownloadURL()
+                images.push(url)
+            }
+            submitHandler(images)
+        }
+    }
+
+    const submitHandler = async(images) => {
         setLoading(true);
-        await uploadImageToFirebase();
+        //await uploadImageToFirebase();
 
         console.log(")(()()()+_-");
 
-        console.log(imgNew);
+        //console.log(imgNew);
 
         let product = {
             product_name: name,
             product_price: price,
             product_quantity: qty, 
             product_description: description,
-            product_image: imgNew,
+            product_image: images,
             product_type: value
         }
 
@@ -102,19 +182,22 @@ function AddProducts (props) {
         setTimeout(function(){ 
             setLoading(false)
          }, 3000);
-
+         setPl(false)
     }
 
 
 
     return (
         <View style={{flex: 1 , backgroundColor: "white"}}>
-            <View>
+            <View style={{
+                position:'absolute',
+                top:0,
+                left:0
+            }}>
             <Image
               style={{
                   height: windowHeight*0.08,
                   width: windowHeight*0.08,
-                  marginTop: -1
               }}
               source={require('../../../assets/loginImages/AngleTopLeft.png')}
               />
@@ -125,11 +208,12 @@ function AddProducts (props) {
                 </View> :  
 
 
-              <ScrollView>
+              <ScrollView style={{flex:1}}>
             <View>
+            <ErrorModal color='#0ae387' visible={err} onClose={closeErr} heading={heading} error={error} />
 
 
-                {path == null ? <View style={{marginTop: 20 , alignItems: "center"}}>
+                {/* {path == null ? <View style={{marginTop: 20 , alignItems: "center"}}>
                 <TouchableOpacity onPress={() => {selectImage()}}>
                  <Image
                     style={{
@@ -149,8 +233,74 @@ function AddProducts (props) {
               }}
               source={path}
             />
-            </View> }
+            </View> } */}
+            {
+                !mloading &&
+                (
+                    mimages.length>0 ?
+                    <View style={{borderWidth:0.75,borderColor:'gray',marginLeft:9,marginRight:9,borderRadius:5,marginTop:windowHeight*0.08}}>
+                    <FlatList
+                    ref={flatListRef}
+                    onContentSizeChange={() => flatListRef.current.scrollToEnd({animated:true})}
+                onScroll={onScroll}
+                   style={{height:windowWidth}}
+                   showsHorizontalScrollIndicator={false}
+                   pagingEnabled={true}
+                   data={mimages}
+                   horizontal={true}
+                   renderItem={({item,index}) => {
+                       return (
+                                <View>
+                                    <TouchableOpacity onPress={() => removeImage(index)} style={{position:'absolute',top:0,right:0,padding:9,zIndex:1}}>
+                                        <Icon name='delete' color='red' size={29} />
+                                        </TouchableOpacity>
+                                    <Image resizeMode='contain' source={item} style={{width:windowWidth-18,height:windowWidth}}/>
+                                </View>                                                             
+                                     
+                       )
+                   }}
+                   />
+                    </View>
+                    :
+                    <View style={{marginTop: 20 , alignItems: "center",height:windowWidth,justifyContent:'center'}}>
+                <TouchableOpacity onPress={() => {selectImage()}}>
+                 <Image
+                    style={{
+                    height: windowWidth/2.5,
+                    width: windowWidth/2.5,
+                  }}
+                     source={require('../../images/addImageIcon.png')}
+                 />
+                </TouchableOpacity>
+                <Text style={[styles.labels ]}>Add Product Images</Text>
+            </View>
+                )
+            }
+             <View style={{justifyContent:'center',alignItems:'center'}}>
+                   <FlatList
+                        horizontal
+                        data={mimages}
+                        renderItem ={({item,index}) => 
+                        index===si?
+                        <View style={{height:5.5,width:5.5,backgroundColor:'#ff6347',borderRadius:2.75,margin:5}}>
+                            </View> :
+                            <View style={{height:5,width:5,backgroundColor:'grey',borderRadius:2.5,margin:5}}>
+                                </View>
+                    }
+                        
+                       />
+                        </View>
+            {
+                mimages.length >0 &&
+                <View style={{alignItems:'center',marginTop:9}}>
+                    <TouchableOpacity style={{alignItems:'center',width:windowWidth/2,backgroundColor:'#0ae38c',borderRadius:9}} onPress={selectImage}>
+                <View style={{padding:9}}>
+                    <Text style={{color:'white',fontSize:19}}>Add Another Image</Text>
+                </View>
+                </TouchableOpacity>
+                    </View>
 
+            }
             
 
             <View style={{marginTop: 20}}>
@@ -162,7 +312,7 @@ function AddProducts (props) {
                             setName(text)
                         }}
                         value={name}
-                        placeholder="Shop Address"
+                        placeholder="Product Name"
                     />
                 </View>
             </View>
@@ -170,12 +320,13 @@ function AddProducts (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Price</Text>
                 <View>
                     <TextInput 
+                    keyboardType='number-pad'
                         style={styles.input}
                         onChangeText={(text) => {
                             setPrice(text)
                         }}
                         value={price}
-                        placeholder="Shop Address"
+                        placeholder="Price"
                     />
                 </View>
             </View>
@@ -183,12 +334,13 @@ function AddProducts (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Quantity</Text>
                 <View>
                     <TextInput 
+                    keyboardType='number-pad'
                         style={styles.input}
                         onChangeText={(text) => {
                             setQty(text)
                         }}
                         value={qty}
-                        placeholder="Shop Address"
+                        placeholder="Quantity"
                     />
                 </View>
             </View>
@@ -224,12 +376,14 @@ function AddProducts (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Description</Text>
                 <View>
                     <TextInput 
-                        style={styles.input}
+                    numberOfLines={5} 
+                    multiline={true}
+                        style={styles.input2}
                         onChangeText={(text) => {
                             setDescription(text)
                         }}
                         value={description}
-                        placeholder="Shop Address"
+                        placeholder="Describe your product"
                     />
                 </View>
             </View>
@@ -237,20 +391,27 @@ function AddProducts (props) {
         </View>
         
 
-        <View style={{alignItems: "center" , marginTop: 15}}>
-                <TouchableOpacity style={styles.submit} onPress={submitHandler}>
-                     <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
-                         Save Product
-                     </Text>
-                </TouchableOpacity>
-            </View>  
+       {
+           !pl ?
+           <View style={{alignItems: "center" , marginTop: 15,marginBottom:45}}>
+           <TouchableOpacity style={styles.submit} onPress={uploadMultipleImages}>
+                <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
+                    Save Product
+                </Text>
+           </TouchableOpacity>
+       </View>  
+       :
+       <View style={{alignItems: "center" , marginTop: 25,marginBottom:45}}>
+           <ActivityIndicator color='#0ae387' size={45} />
+       </View>
+       }
 
         </ScrollView> }
 
             <View style={{
-                flex: 1,
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
+                position:'absolute',
+                bottom:0,
+                right:0
                 }}>
            
             <Image
@@ -293,6 +454,18 @@ const styles = StyleSheet.create({
     borderColor: "#7c7c7c",
     fontFamily: "Montserrat-Light",
     padding: 10
+  },
+  input2:{
+    //height: windowHeight*0.05,
+    width: windowWidth*0.8,
+    marginLeft: windowWidth*0.1 ,
+    marginTop: 8,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#7c7c7c",
+    fontFamily: "Montserrat-Light",
+    padding: 10,
+    textAlignVertical:'top'
   },
   bootombar: {
     width: windowWidth*0.8, 

@@ -31,13 +31,17 @@ function SellerProfile(props) {
 
     const shareHandler = () => {
         let img = ""
+        var name = info.shop_name.toString()
+        console.log(name)
+        var k = name.split(' ')
+        console.log(k)
         setShareLoading(true);
         ImgToBase64.getBase64String(info.shop_image)
         .then(base64String => {
          img = 'data:image/jpeg;base64,' + base64String
          Share.open({
             title:`Share My Shop ${info.shop_name}`,
-            message:`Checkout products of my shop ${info.shop_name} on localapp by clicking on this link https://www.localapp.in/shop/${info.shop_name}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link `,
+            message:`Checkout products of my shop ${info.shop_name} on localapp by clicking on this link https://www.localapp.in/shop/${k[0]}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link `,
             url:img
         }
         ).then((res) => {
