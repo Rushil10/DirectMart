@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image} from 'react-native';
+import { Text , View , Dimensions , StyleSheet , Image , Alert} from 'react-native';
 import Navbar from '../../components/Navbar'
 import SigninComponent from '../../components/SigninComponent'
-
+import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -10,7 +10,14 @@ const windowHeight = Dimensions.get('window').height;
 
 function SellerSignin (props) {
 
+  const [err,showErr] = React.useState(false);
+  const [heading,setHeading] = React.useState('')
+  const [error,setError] = React.useState('')
 
+
+  const closeErr = () => {
+    showErr(false)
+}
 
     return (
         <View style={{flex: 1}}>
@@ -24,6 +31,9 @@ function SellerSignin (props) {
               }}
               source={require('../../../assets/loginImages/AngleTopLeft.png')}
             />
+
+{/* <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} /> */}
+
             <SigninComponent signIn={props.navigation}/>
             
             

@@ -4,6 +4,7 @@ import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOp
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 import url from '../../api/api'
 
 const windowWidth = Dimensions.get('window').width;
@@ -24,10 +25,10 @@ function AddProducts (props) {
 
     let imgNew = ""
     
-    const [name , setName] = useState("");
-    const [price , setPrice] = useState("");
-    const [qty , setQty] = useState("");
-    const [description , setDescription] = useState("");
+    const [name , setName] = useState(null);
+    const [price , setPrice] = useState(null);
+    const [qty , setQty] = useState(null);
+    const [description , setDescription] = useState(null);
     const [path,setPath] = React.useState(null);
     const [img , setImg] = useState(null)
     const [open, setOpen] = useState(false);
@@ -38,6 +39,14 @@ function AddProducts (props) {
       {label: 'Type 2', value: '2'},
       {label: 'Type 3', value: '3'}
      ]);
+     const [err,showErr] = React.useState(false);
+     const [heading,setHeading] = React.useState('')
+     const [error,setError] = React.useState('')
+   
+   
+     const closeErr = () => {
+       showErr(false)
+   }
 
 
     const selectImage = () => {
@@ -56,7 +65,6 @@ function AddProducts (props) {
 
     const uploadImageToFirebase = async() => {
         if(path){
-            
             const name = generateString(9);
             let reference = storage().ref(name);
             console.log("URL");
@@ -73,13 +81,6 @@ function AddProducts (props) {
     }
 
     const submitHandler = async() => {
-        setLoading(true);
-        await uploadImageToFirebase();
-
-        console.log(")(()()()+_-");
-
-        console.log(imgNew);
-
         let product = {
             product_name: name,
             product_price: price,
@@ -88,10 +89,18 @@ function AddProducts (props) {
             product_image: imgNew,
             product_type: value
         }
-
-        console.log("$$$$$$$$$$$$$$$$");
-        console.log(product);
-        var token = await AsyncStorage.getItem('shop_token');
+        
+        if(name == null || price== null || qty == null || description == null || value == null)
+        {
+            console.log("Comming here");
+            setHeading("Empty Feild")
+            setError("Product Name , price , quantity , description , image or type might not be set please chechk")
+            setError(true)
+        }
+        else{
+            setLoading(true);
+            await uploadImageToFirebase();       
+            var token = await AsyncStorage.getItem('shop_token');
         console.log(token);
 
         console.log(product);
@@ -102,6 +111,10 @@ function AddProducts (props) {
         setTimeout(function(){ 
             setLoading(false)
          }, 3000);
+
+        }
+
+        
 
     }
 
@@ -115,10 +128,11 @@ function AddProducts (props) {
                   height: windowHeight*0.08,
                   width: windowHeight*0.08,
                   marginTop: -1
-              }}
+                }}
               source={require('../../../assets/loginImages/AngleTopLeft.png')}
               />
             </View>
+                <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
 
             { loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:windowWidth}} />
@@ -176,6 +190,7 @@ function AddProducts (props) {
                         }}
                         value={price}
                         placeholder="Shop Address"
+                        keyboardType="numeric"
                     />
                 </View>
             </View>
@@ -189,6 +204,7 @@ function AddProducts (props) {
                         }}
                         value={qty}
                         placeholder="Shop Address"
+                        keyboardType="number-pad"
                     />
                 </View>
             </View>

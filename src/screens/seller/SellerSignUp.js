@@ -1,7 +1,9 @@
-import React, { Component , useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , KeyboardAvoidingView, ScrollView} from 'react-native';
+import React, { Component , useState , useEffect } from 'react';
+import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , KeyboardAvoidingView, ScrollView , AsyncStorage} from 'react-native';
 import Navbar from '../../components/Navbar'
 import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
+import jwtDecode from 'jwt-decode';
+
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -23,7 +25,28 @@ function SellerSignUp (props) {
         showErr(false)
     }
 
+    useEffect(() => {
+        // console.log(props.route.params.type);
+        if(props.route.params.type = "edit")
+        {
+            //WE CAN EDIT PROFILE FROM HERE
+            getDetails()
+            
+        }
+    } , []);
+
     var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
+
+    const getDetails = async () => {
+        var token = await AsyncStorage.getItem('shop_token');
+        var decode = jwtDecode(token);
+        console.log(decode);
+        setSname(decode.shop_name)
+        setOname(decode.shop_owner)
+        setUname(decode.shop_email)
+        setPass("XXXXXXXXX")
+        setrpass("XXXXXXXXX")
+    }
 
     const goToSignup2 = () => {
         if(sname.length===0 || oname.length===0 || uname.length===0 || pass.length===0 || rpass.length===0){

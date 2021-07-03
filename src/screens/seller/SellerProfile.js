@@ -203,9 +203,8 @@ function SellerProfile(props) {
                     <View style={{flexDirection : "column" , alignItems: "center" , justifyContent: "center" , marginTop: 10 , marginBottom: 10}}>
 
             <TouchableOpacity  onPress={async () => {
-
-
-                 
+                props.navigation.navigate("SellerSignUp" , {type: "edit"});
+    
                 //  const e = await messaging().hasPermission();
 
                 //  console.log("e" , e);
@@ -215,35 +214,35 @@ function SellerProfile(props) {
                 //     let fcm = await AsyncStorage.read(fcmToken)
                 //     console.log("fcm" , fcm);
                 //  }
-                    const fcmToken = await messaging().getToken();
-                    if (fcmToken) {
-                       console.log(fcmToken);
-                    } 
+                //     const fcmToken = await messaging().getToken();
+                //     if (fcmToken) {
+                //        console.log(fcmToken);
+                //     } 
                    
 
-                console.log("HELLo");
+                // console.log("HELLo");
 
 
-                messaging().onNotificationOpenedApp(remoteMessage => {
-                    console.log(
-                      'Notification caused app to open from background state:',
-                      remoteMessage.notification,
-                    );
-                    navigation.navigate(remoteMessage.data.type);
-                  });
+                // messaging().onNotificationOpenedApp(remoteMessage => {
+                //     console.log(
+                //       'Notification caused app to open from background state:',
+                //       remoteMessage.notification,
+                //     );
+                //     navigation.navigate(remoteMessage.data.type);
+                //   });
               
-                  // Check whether an initial notification is available
-                  messaging()
-                    .getInitialNotification()
-                    .then(remoteMessage => {
-                      if (remoteMessage) {
-                        console.log(
-                          'Notification caused app to open from quit state:',
-                          remoteMessage.notification,
-                        );
-                        setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-                      }
-                    });
+                //   // Check whether an initial notification is available
+                //   messaging()
+                //     .getInitialNotification()
+                //     .then(remoteMessage => {
+                //       if (remoteMessage) {
+                //         console.log(
+                //           'Notification caused app to open from quit state:',
+                //           remoteMessage.notification,
+                //         );
+                //         setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+                //       }
+                //     });
 
                 }}>
                 <View style={styles.submit2}>
