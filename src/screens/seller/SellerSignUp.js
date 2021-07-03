@@ -65,7 +65,9 @@ function SellerSignUp (props) {
                 oname : oname,
                 uname : uname,
                 pass  : pass ,
-                rpass : rpass,})
+                rpass : rpass,
+                type: props.route.params.type
+            })
         }
     }
 

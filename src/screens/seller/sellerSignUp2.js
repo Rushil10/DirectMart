@@ -97,7 +97,7 @@ function SellerSignUp2 (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Description of Shop</Text>
                 <View>
                     <TextInput
-                    keyboardType='number-pad'
+                    //keyboardType='number-pad'
                     numberOfLines={5} 
                     multiline={true}
                         style={styles.input}
