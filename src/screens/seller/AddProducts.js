@@ -98,7 +98,6 @@ function AddProducts (props) {
 
     const uploadImageToFirebase = async() => {
         if(path){
-            
             const name = generateString(9);
             let reference = storage().ref(name);
             console.log("URL");
@@ -113,7 +112,7 @@ function AddProducts (props) {
             console.log("No image");
         }
     }
-
+    
     const removeImage = async(index) => {
         console.log('called ')
         await setMloading(true)
@@ -152,13 +151,9 @@ function AddProducts (props) {
         }
     }
 
+
     const submitHandler = async(images) => {
         setLoading(true);
-        //await uploadImageToFirebase();
-
-        console.log(")(()()()+_-");
-
-        //console.log(imgNew);
 
         let product = {
             product_name: name,
@@ -168,10 +163,18 @@ function AddProducts (props) {
             product_image: images,
             product_type: value
         }
-
-        console.log("$$$$$$$$$$$$$$$$");
-        console.log(product);
-        var token = await AsyncStorage.getItem('shop_token');
+        
+        if(name == null || price== null || qty == null || description == null || value == null)
+        {
+            console.log("Comming here");
+            setHeading("Empty Feild")
+            setError("Product Name , price , quantity , description , image or type might not be set please chechk")
+            setError(true)
+        }
+        else{
+            setLoading(true);
+            await uploadImageToFirebase();       
+            var token = await AsyncStorage.getItem('shop_token');
         console.log(token);
 
         console.log(product);
@@ -184,7 +187,7 @@ function AddProducts (props) {
          }, 3000);
          setPl(false)
     }
-
+    }
 
 
     return (
@@ -198,10 +201,12 @@ function AddProducts (props) {
               style={{
                   height: windowHeight*0.08,
                   width: windowHeight*0.08,
-              }}
+                  marginTop: -1
+                }}
               source={require('../../../assets/loginImages/AngleTopLeft.png')}
               />
             </View>
+                <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
 
             { loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:windowWidth}} />
@@ -211,29 +216,6 @@ function AddProducts (props) {
               <ScrollView style={{flex:1}}>
             <View>
             <ErrorModal color='#0ae387' visible={err} onClose={closeErr} heading={heading} error={error} />
-
-
-                {/* {path == null ? <View style={{marginTop: 20 , alignItems: "center"}}>
-                <TouchableOpacity onPress={() => {selectImage()}}>
-                 <Image
-                    style={{
-                    height: windowHeight*0.08,
-                    width: windowHeight*0.08,
-                  }}
-                     source={require('../../images/addImageIcon.png')}
-                 />
-                </TouchableOpacity>
-                <Text style={[styles.labels ]}>Add Product Images</Text>
-            </View> : <View style={{alignItems: "center"}}>
-            <Image
-              style={{
-                height: windowHeight*0.2,
-                width: windowHeight*0.2,
-                borderRadius: 20
-              }}
-              source={path}
-            />
-            </View> } */}
             {
                 !mloading &&
                 (
@@ -327,6 +309,7 @@ function AddProducts (props) {
                         }}
                         value={price}
                         placeholder="Price"
+                        keyboardType="number-pad"
                     />
                 </View>
             </View>
@@ -341,6 +324,7 @@ function AddProducts (props) {
                         }}
                         value={qty}
                         placeholder="Quantity"
+                        keyboardType="number-pad"
                     />
                 </View>
             </View>
@@ -426,6 +410,7 @@ function AddProducts (props) {
     );
 }
 
+
 const styles = StyleSheet.create({
   navbar: {
     width: windowWidth, 
@@ -484,4 +469,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AddProducts;
+export default AddProducts

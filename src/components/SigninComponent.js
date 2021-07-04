@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image, TextInput, TouchableOpacity , AsyncStorage} from 'react-native';
+import { Text , View , Dimensions , StyleSheet , Image, TextInput, TouchableOpacity , AsyncStorage , Alert} from 'react-native';
 import CheckBox from 'react-native-check-box'
 
 import axios from 'axios';
@@ -12,11 +12,7 @@ import jwtDecode from 'jwt-decode';
 
 class SigninComponent extends Component {
 
-   loginHandler = () => {
-    // console.log(this.state.email);
-    // console.log(this.state.pass);
-
-    
+   loginHandler = () => {    
 
     this.setState({
       loading: true
@@ -25,7 +21,7 @@ class SigninComponent extends Component {
     var seller = {
       shop_email:this.state.email,
       shop_password:this.state.pass
-  }
+    }
 
   console.log(seller);
 
@@ -56,15 +52,16 @@ class SigninComponent extends Component {
         });
       })
     })
-    .catch(err => {
-        console.log(err);
-    })
 
+    setTimeout(() => {
       this.setState({
         loading: false
-      })    
-
+      }) 
+    },3000)
   }
+
+  
+    
 
     state = {
        isChecked: false ,
@@ -136,7 +133,7 @@ class SigninComponent extends Component {
                      </View>
              </View>
              <View style={{alignItems: "flex-end" , marginRight: windowWidth*0.1 }}>
-                    <TouchableOpacity onPress={() => {this.props.signIn.navigate("SellerSignUp")}}>
+                    <TouchableOpacity onPress={() => {this.props.signIn.navigate("SellerSignUp" , {type: "new"})}}>
                      <Text style={{color: "grey" , fontFamily: 'Montserrat-Light' }}>Sign Up</Text>
                     </TouchableOpacity>
                    </View>

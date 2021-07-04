@@ -1,7 +1,9 @@
-import React, { Component , useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , KeyboardAvoidingView, ScrollView} from 'react-native';
+import React, { Component , useState , useEffect } from 'react';
+import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , KeyboardAvoidingView, ScrollView , AsyncStorage} from 'react-native';
 import Navbar from '../../components/Navbar'
 import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
+import jwtDecode from 'jwt-decode';
+
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -23,9 +25,30 @@ function SellerSignUp (props) {
         showErr(false)
     }
 
+    useEffect(() => {
+        // console.log(props.route.params.type);
+        if(props.route.params.type = "edit")
+        {
+            //WE CAN EDIT PROFILE FROM HERE
+            getDetails()
+            
+        }
+    } , []);
+
     var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
 
-    const goToSignup2 = () => {
+    const getDetails = async () => {
+        var token = await AsyncStorage.getItem('shop_token');
+        var decode = jwtDecode(token);
+        console.log(decode);
+        setSname(decode.shop_name)
+        setOname(decode.shop_owner)
+        setUname(decode.shop_email)
+        setPass("xxxxxxxxx")
+        setrpass("xxxxxxxxx")
+    }
+
+    const goToSignup2 = async () => {
         if(sname.length===0 || oname.length===0 || uname.length===0 || pass.length===0 || rpass.length===0){
             setHeading('Invalid Credential')
             setError('Shop Name , Owner Name , Email and Password must Not be empty !')
@@ -37,12 +60,17 @@ function SellerSignUp (props) {
                 showErr(true)
                 //setLoading(false)
         } else {
+            var token = await AsyncStorage.getItem('shop_token');
+            var decode = jwtDecode(token);
             props.navigation.push("SellerSignUp2" , {
                 sname : sname,
                 oname : oname,
                 uname : uname,
                 pass  : pass ,
-                rpass : rpass,})
+                rpass : rpass,
+                type: props.route.params.type,
+                decode: decode
+            })
         }
     }
 
@@ -65,8 +93,8 @@ function SellerSignUp (props) {
             <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
             <View>
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
-                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>New to SHOPY!</Text>
-                <Text style={styles.labels}>Register Here</Text>
+                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>{props.route.params.type === "edit" ? "Edit your profile" :"New to SHOPY" } </Text>
+                <Text style={styles.labels}>{props.route.params.type === "edit" ? "you can edit all your shop details here !" :"Register Here" }</Text>
             </View>
             <View style={{marginTop: 20}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Shop Name</Text>
@@ -107,7 +135,7 @@ function SellerSignUp (props) {
                     /> 
                 </View>
             </View>
-            <View style={{marginTop: 20}}>
+            {props.route.params.type != "edit" ? <View style={{marginTop: 20}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Password</Text>
                 <View>
                     <TextInput 
@@ -119,8 +147,8 @@ function SellerSignUp (props) {
                         placeholder="Password" 
                     /> 
                 </View>
-            </View>
-            <View style={{marginTop: 20}}>
+            </View> : <View /> }
+            {props.route.params.type != "edit" ? <View style={{marginTop: 20}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Repeat Password</Text>
                 <View>
                     <TextInput 
@@ -132,7 +160,7 @@ function SellerSignUp (props) {
                         placeholder="Repeat Password" 
                     /> 
                 </View>
-            </View>
+            </View> : <View /> }
            <View style={{alignItems: "center" , marginTop: 15}}>
                 <TouchableOpacity style={styles.submit} onPress={goToSignup2}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >

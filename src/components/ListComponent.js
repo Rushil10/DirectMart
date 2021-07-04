@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     order: {
         height: height*0.06 , 
         borderRadius: 20,
-        width: width*0.65 , 
+        width: width*0.8 , 
         backgroundColor: "red",
         justifyContent: "center",
         alignItems: "center"

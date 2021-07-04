@@ -12,7 +12,7 @@ function productsList({item , navigation}) {
             <TouchableOpacity onPress={navigation}>
                 <View style={styles.renderItem}>
                     <View style={styles.upper}>
-                        <View style={{justifyContent:'center',alignItems:'center'}}>
+                        <View style={{alignItems : "center"}}>
                             <Image
                                 style={{height: width*0.3,borderRadius:5 , width: width*0.3,resizeMode:'cover'}}
                                 source={{uri: item.item.product_image[0]}}
