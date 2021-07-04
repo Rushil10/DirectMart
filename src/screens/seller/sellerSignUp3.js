@@ -60,11 +60,13 @@ function SellerSignUp (props) {
 
 
     if(props.route.params.type == "edit") {
+      var token = await AsyncStorage.getItem('shop_token')
         console.log("HERE BABY !!!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@");
         
         await axios.post(`${url}/shop/update`,seller, {
           headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
           }
       }).then(async(res) => {
           console.log(res.data);
