@@ -20,7 +20,22 @@ function SellerSignUp2 (props) {
     const [heading,setHeading] = React.useState('')
     const [error,setError] = React.useState('')
 
-    const closeErr = () => {
+      React.useEffect(() => {
+        // console.log(props.route.params.type);
+        if(props.route.params.type = "edit")
+        {
+            //WE CAN EDIT PROFILE FROM HERE
+            console.log(props.route.params.decode);
+            let data = props.route.params.decode;
+            setAdd(data.shop_location);
+            setNum(data.shop_contact);
+            setDesc(data.shop_description)
+            setTime(data.shop_timing)
+            setId(data.shop_upiId)
+        }
+    } , []);
+
+    const closeErr = () => { 
         showErr(false)
     }
 
@@ -45,6 +60,7 @@ function SellerSignUp2 (props) {
                 desc  : desc,
                 time  : time,
                 id    : id ,
+                type: props.route.params.type
             })
         }
     }

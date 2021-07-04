@@ -26,6 +26,9 @@ function SellerSignUp (props) {
   
   const submitHandler = async () => {
     if(location){
+
+      
+
       let sname = props.route.params.sname
     let oname = props.route.params.oname
     let uname = props.route.params.uname
@@ -54,21 +57,52 @@ function SellerSignUp (props) {
      shop_password  : pass,
      shop_description : desc
     }
-    await axios.post(`${url}/shop/signup`,seller, {
-      headers: {
-      'Content-Type': 'application/json'
+
+
+    if(props.route.params.type == "edit") {
+        console.log("HERE BABY !!!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@");
+        
+        await axios.post(`${url}/shop/update`,seller, {
+          headers: {
+          'Content-Type': 'application/json'
+          }
+      }).then(async(res) => {
+          console.log(res.data);
+          var token = res.data.token;
+          await AsyncStorage.setItem('shop_token', token)
+          await setFcmToken(token)
+          props.navigation.reset({
+            index: 0,
+            routes: [{name: 'Seller'}],
+        });
+      }) 
+
+
+
+      } else {
+
+        var token = await AsyncStorage.getItem('shop_token');
+
+        await axios.post(`${url}/shop/signup`,seller, {
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+      }).then(async(res) => {
+          console.log(res.data);
+          var token = res.data.token;
+          await AsyncStorage.setItem('shop_token', token)
+          await setFcmToken(token)
+          props.navigation.reset({
+            index: 0,
+            routes: [{name: 'Seller'}],
+        });
+      }) 
+        }
+
       }
-  }).then(async(res) => {
-      console.log(res.data);
-      var token = res.data.token;
-      await AsyncStorage.setItem('shop_token', token)
-      await setFcmToken(token)
-      props.navigation.reset({
-        index: 0,
-        routes: [{name: 'Seller'}],
-    });
-  }) 
-    } else {
+
+     else {
       setHeading('Location Unaccessible')
             setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
             showErr(true)
@@ -154,7 +188,7 @@ function SellerSignUp (props) {
                     submitHandler()
                 }}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
-                         Submit
+                         {props.route.params.type == "edit" ? "Save Changes" : "Submit"}
                      </Text>
                 </TouchableOpacity>
             </View>      

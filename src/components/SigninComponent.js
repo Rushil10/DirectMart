@@ -53,10 +53,11 @@ class SigninComponent extends Component {
       })
     })
 
+    setTimeout(() => {
       this.setState({
         loading: false
-      })    
-
+      }) 
+    },3000)
   }
 
   

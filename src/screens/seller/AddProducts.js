@@ -26,10 +26,10 @@ function AddProducts (props) {
 
     let imgNew = ""
     
-    const [name , setName] = useState(null);
-    const [price , setPrice] = useState(null);
-    const [qty , setQty] = useState(null);
-    const [description , setDescription] = useState(null);
+    const [name , setName] = useState("");
+    const [price , setPrice] = useState("");
+    const [qty , setQty] = useState("");
+    const [description , setDescription] = useState("");
     const [path,setPath] = React.useState(null);
     const [img , setImg] = useState(null)
     const [open, setOpen] = useState(false);

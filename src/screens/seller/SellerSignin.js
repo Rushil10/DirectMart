@@ -20,7 +20,7 @@ function SellerSignin (props) {
 }
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1 , backgroundColor: "white"}}>
           {/* <Navbar /> */}
             <View>
             <Image

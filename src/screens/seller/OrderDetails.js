@@ -1,11 +1,13 @@
 import * as React from 'react';
 import axios from 'axios';
-import { View, Text, AsyncStorage,Dimensions , TouchableOpacity , ActivityIndicator , FlatList , StyleSheet ,Image , ScrollView} from 'react-native';
+import { View, Text, AsyncStorage,Dimensions , TouchableOpacity , ActivityIndicator , FlatList , StyleSheet ,Image , ScrollView , Alert} from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../consumer/ConsumerComponents/Header';
 import { url } from '../../api/api';
 import ListComponent from '../../components/ListComponent'
+import { fetchOrders , orderReadyForDelivery , orderDelivered } from '../../redux/seller/actions/ordersActions';
+
 
 const {height,width} = Dimensions.get('window')
 
@@ -14,6 +16,55 @@ function OrderDetails(props) {
 const [loading , setLoading] = React.useState(false);
 const [data , setData] = React.useState([]);
 const [orders , setOrders] = React.useState([]);
+
+const orderReadyForDeliveryAlert = (data) =>
+    Alert.alert(
+      "Order Ready ?",
+      "Are you sure that the Order of " + data.consumer_name + " is ready for delivery",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Yes", onPress: async () => {
+            setLoading(true)
+            console.log("Yes");
+            console.log(data);
+            console.log(props);
+            props.orderReadyForDelivery(data);
+            setTimeout(function(){ 
+                setLoading(false)
+             }, 3000);
+        } }
+      ]
+    );
+
+    const orderDeliveredAlert = (data) =>
+    Alert.alert(
+      "Order Delivered ?",
+      "Are you sure that the Order of " + data.consumer_name + " is delivered",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Yes", onPress: async () => {
+            setLoading(true)
+            props.orderDelivered(data);
+            setTimeout(function(){ 
+                setLoading(false)
+             }, 3000);
+        } }
+      ]
+    );
+
+    const DeliveredAlert = () =>
+    Alert.alert(
+      "Order Delivered ?",
+      "This Order of " + item.item.consumer_name + " is already delivered",
+    );
 
 const OrderDetails =async (DATA) => {
     setLoading(true)
@@ -108,6 +159,21 @@ const renderItem = ({item}) => {
                 </View> 
             </View>
 
+            <TouchableOpacity style={{alignItems: "center" , marginTop: 20}} onPress={() => {
+                        if(data.delivery_status == "pending")
+                        orderReadyForDeliveryAlert(data)
+                        else if(data.delivery_status == "Out For Delivery")
+                        orderDeliveredAlert(data)
+                        else if(data.delivery_status == "Delivered")
+                        DeliveredAlert()
+                    }}>
+                        <View style={styles.order}>
+                            <Text style={[styles.text , {color: "white"}]}>
+                                {data.delivery_status == "pending" ? "Order Ready For Delivery/Pickup" :  data.delivery_status == "Out For Delivery" ? "Click if Order is Delivered" : "Delivered" }
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+
             <View style={{marginLeft: width*0.08 , marginTop: height*0.04}}>
                 <Text style={{fontFamily: "Montserrat-ExtraBold" , fontSize: width*0.05 }}>ORDER</Text> 
 
@@ -145,4 +211,56 @@ const renderItem = ({item}) => {
     )
 }
 
-export default OrderDetails;
+const styles = StyleSheet.create({
+    renderItem: {
+        flex: 1,
+        height: height*0.38 , 
+        width: width*0.95 ,  
+        margin: 8 , 
+        backgroundColor: "white",
+        borderRadius: 20 ,
+        borderWidth: 1.5 , 
+        borderColor: "#0ae38c" 
+    },
+    upper: {
+        flex: 0.3,
+        // backgroundColor: "orange",
+        borderRadius: 20,
+        justifyContent: "center"
+    },
+    text: {
+        fontFamily: "Montserrat-Bold"
+    },
+    mid: {
+        flex: 0.3,
+        flexDirection: "row",
+        borderRadius: 20
+    },
+    bottom: {
+        flex: 0.3,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    order: {
+        height: height*0.06 , 
+        borderRadius: 20,
+        width: width*0.8 , 
+        backgroundColor: "red",
+        justifyContent: "center",
+        alignItems: "center"
+    }
+  });
+
+  const mapStateToProps = (state) => {
+    return{
+        orders : state
+    }
+}
+
+const mapDispatchToProps = { 
+  fetchOrders,
+  orderReadyForDelivery,
+  orderDelivered
+}
+
+export default connect(mapStateToProps , mapDispatchToProps)(OrderDetails);
