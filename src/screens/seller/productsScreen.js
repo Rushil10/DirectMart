@@ -67,15 +67,15 @@ function ProductsScreen(props) {
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
                 </View> : 
 
-            <View>
+            <View style={{flex:1}}>
 
-            <TouchableOpacity onPress={() => {props.navigation.navigate("AddProducts" ,{addProducts: addProducts})}} style={{marginTop: 20 , alignItems: "center"}}>
-                <View style={{height: height*0.06 , width: width*0.5 , borderRadius: 200 , backgroundColor: "#0ae38c" , alignItems: "center" , justifyContent: "center"}}>
-                    <Text style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}}>Add More Products</Text>
+            <TouchableOpacity onPress={() => {props.navigation.navigate("AddProducts" ,{addProducts: addProducts})}} style={{marginTop: 9 , alignItems: "center"}}>
+                <View style={{padding:9,paddingHorizontal:15, borderRadius: 200 , backgroundColor: "#0ae38c" , alignItems: "center" , justifyContent: "center"}}>
+                    <Text style={{color: "white" , fontFamily: "Montserrat-Bold" , fontSize: height*0.02}}>Add New Product</Text>
                 </View>
             </TouchableOpacity>
             
-            <View style={{marginTop: 10 , alignItems: "center" , marginBottom : height*0.25}}>
+            <View style={{marginTop: 2.5 , alignItems: "center" , paddingBottom : 55}}>
                 <FlatList 
                     data={products}
                     renderItem={renderItem}

@@ -12,9 +12,15 @@ function productsList({item , navigation}) {
             <TouchableOpacity onPress={navigation}>
                 <View style={styles.renderItem}>
                     <View style={styles.upper}>
+<<<<<<< HEAD
                         <View style={{alignItems : "center"}}>
+||||||| df0be80
+                        <View style={{}}>
+=======
+                        <View style={{justifyContent:'center',alignItems:'center'}}>
+>>>>>>> 9945f6fd7cafddf02d73a067df1194fdc91d28d6
                             <Image
-                                style={{height: height*0.15 , width: width*0.3 , marginLeft: 10}}
+                                style={{height: width*0.3,borderRadius:5 , width: width*0.3,resizeMode:'cover'}}
                                 source={{uri: item.item.product_image[0]}}
                             />
                         </View>

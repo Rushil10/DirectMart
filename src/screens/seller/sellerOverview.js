@@ -53,9 +53,17 @@ function SellerScreen(props) {
         )
     }
 
+    const reload = () => {
+        setLoading(true) 
+        props.fetchOrders
+        setTimeout(function(){ 
+            setLoading(false)
+         }, 3000);
+    }
+
     return (
         <View style={{flex:1 , backgroundColor: "white"}}>
-            <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}} backgroundColor='#0ae38c' header='New Orders' height={55} width={width} />
+            <Header style={{ color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}} backgroundColor='#0ae38c' header='New Orders' height={55} width={width} refreshFunction={reload} />
             {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
                 </View>  : 

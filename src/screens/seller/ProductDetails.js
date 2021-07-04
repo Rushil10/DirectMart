@@ -1,12 +1,14 @@
 import axios from "axios"
 import React, {useEffect, useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage ,ActivityIndicator} from 'react-native';
+import { Text , View , Dimensions,FlatList , StyleSheet , Image , TextInput , TouchableOpacity , ScrollView ,AsyncStorage ,ActivityIndicator} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { updateProducts } from '../../redux/seller/actions/productActions';
 import { connect } from 'react-redux';
 import url from '../../api/api'
+import Icon from 'react-native-vector-icons/AntDesign'
+import ErrorModal from "../consumer/ConsumerComponents/ErrorModal";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -32,13 +34,68 @@ function ProductDetails (props) {
     const [path,setPath] = React.useState(null);
     const [img , setImg] = useState("")
     const [open, setOpen] = useState(false);
+    const flatListRef =React.useRef(null);
     const [loading, setLoading] = useState(false);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState('packaged');
     const [items, setItems] = useState([
-      {label: 'packaged', value: 'packaged'},
-      {label: 'loose', value: 'loose'},
-      {label: 'individual', value: 'individual'}
+        {label: 'Packaged', value: 'packaged'},
+        {label: 'Clothing', value: 'Clothing'},
+        {label: 'Daily Needs', value: 'Daily Needs'},
+        {label: 'Others', value: 'Others'}
      ]);
+    const [mimages,setMimages] = React.useState([])
+    const [si,setSi] = React.useState(0);
+    const [index, setIndex] = React.useState(0);
+    const indexRef = React.useRef(index);
+    const [pl,setPl] = React.useState(false);
+    const [mloading,setMloading] = React.useState(true);
+    indexRef.current = index;
+    const onScroll = React.useCallback((event) => {
+        const slideSize = event.nativeEvent.layoutMeasurement.width;
+        const index = event.nativeEvent.contentOffset.x / slideSize;
+        const roundIndex = Math.round(index);
+        console.log(event.nativeEvent,'eventtt')
+        const distance = Math.abs(roundIndex - index);
+        const isNoMansLand = 0.4 < distance;
+
+        if (roundIndex !== indexRef.current && !isNoMansLand) {
+            setIndex(roundIndex);
+        }
+    }, []);
+
+    const [err,showErr] = React.useState(false);
+    const [heading,setHeading] = React.useState('')
+    const [error,setError] = React.useState('')
+
+    const closeErr = () => {
+        showErr(false)
+    }
+
+    const selectImage = () => {
+        ImageCropPicker.openPicker({
+            cropping:true
+        }).then(image => {
+            setMloading(true);
+            console.log(image);
+            var [category, extension] = image.mime.split("/")
+            console.log(category);
+            const media=[];
+             var media1 = { uri: image.path,isUploaded:false, width: image.width, height: image.height, mime:image.mime, type: category }
+             media.push(media1)
+             setPath(media)
+             var prev = mimages
+             prev.push(media)
+             setMimages(prev)
+             setMloading(false)
+        })
+    }
+
+    React.useEffect(() => {
+        //console.warn(index);
+        setIndex(index);
+        setSi(index)
+    }, [index]);
+
 
      const fetchProductDetails = (product) => {
 
@@ -46,30 +103,80 @@ function ProductDetails (props) {
         setId(product.product_id);
         setPrice(product.product_price.toString()); 
         setName(product.product_name);
+        setValue(product.product_type)
         console.log("******");
         setQty(product.product_quantity.toString()); 
+        setDescription(product.product_description)
         setImg(product.product_image[0])
         setPath(product.product_image[0])
         // setItems({label: product.product_type})
      }
 
-    const editHandler = () => {
+     const uploadToFireabse = async() => {
+        var images = []
+        if(name.length===0 || qty.length===0 || price.length===0 || description.length==0) {
+            setHeading('Insufficient Data')
+            setError('Name , Quantity , Price , Description and Type must Not be empty !')
+            showErr(true)
+        } else if(mimages.length===0){
+            setHeading('Upload Image')
+            setError('You must upload atleast 1 image !')
+            showErr(true)
+        } else if(value.length===0){
+            setHeading('Product Type')
+            setError('Product Type must not be empty !')
+            showErr(true)
+        } else {
+            setPl(true);
+            for(var i=0;i<mimages.length;i++){
+                if(!mimages[i][0].isUploaded){
+                    const name = generateString(9);
+                console.log(name)
+                console.log(mimages[i][0].uri)
+                let reference = storage().ref(name.toString())
+                await reference.putFile(mimages[i][0].uri)
+                let url = await reference.getDownloadURL()
+                images.push(url)
+                } else {
+                    images.push(mimages[i][0].uri)
+                }
+            }
+            editHandler(images)
+        }
+     }
+
+    const editHandler = (images) => {
         let product = {
             product_id: id,
             product_name: name,
             product_price: price,
             product_quantity: qty, 
             product_description: description,
-            product_image: [img],
+            product_image: images,
             product_type: value,
             increase_quantity: 0,
             decrease_quantity: 0
         }
 
         props.updateProducts(product)
+        setPl(false)
 
         props.navigation.navigate("Seller")
 
+    }
+
+    const setImageDetails = (product) => {
+        setMloading(true)
+        console.log(product.product_image)
+        var allImages = []
+        product.product_image.map(img => {
+            var image = []
+            var nimg = {uri:img,isUploaded:true}
+            image.push(nimg)
+            allImages.push(image)
+        })
+        setMimages(allImages)
+        setMloading(false)
     }
 
     useEffect(() => {
@@ -77,27 +184,39 @@ function ProductDetails (props) {
         console.log("HERE I AMA");
         console.log(props.route.params.item.item);
         fetchProductDetails(props.route.params.item.item);
+        setImageDetails(props.route.params.item.item)
         setLoading(false)
     },[])
 
+    const removeImage = async(index) => {
+        console.log('called ')
+        await setMloading(true)
+        var mim = mimages
+        mim.splice(index, 1)
+        setMimages(mim)
+        setMloading(false)
+    }
 
-
-    return (<>
-        {loading ?  <ActivityIndicator size="large" color="#00ff00" /> :  <View style={{flex: 1}}>
-        <View>
+    return (<View style={{flex:1}}>
+        <View style={{
+                position:'absolute',
+                top:0,
+                left:0,
+                zIndex:1}}>
         <Image
           style={{
               height: windowHeight*0.08,
               width: windowHeight*0.08,
-              marginTop: -1
           }}
           source={require('../../../assets/loginImages/AngleTopLeft.png')}
           />
-        </View>
+        </View> 
+        {loading ?  <ActivityIndicator size="large" color="#00ff00" /> :
+         <ScrollView style={{flex: 1, backgroundColor: "white"}}>
         <View>
 
 
-            {path == null ? <View style={{marginTop: 20 , alignItems: "center"}}>
+            {/* {path == null ? <View style={{marginTop: 20 , alignItems: "center"}}>
             <TouchableOpacity onPress={() => {}}>
              <Image
                 style={{
@@ -119,8 +238,74 @@ function ProductDetails (props) {
               uri: img
           }}
         />
-        </View> }
+        </View> } */}
+{
+                !mloading &&
+                (
+                    mimages.length>0 ?
+                    <View style={{borderWidth:0.75,borderColor:'gray',marginLeft:9,marginRight:9,borderRadius:5,marginTop:windowHeight*0.08}}>
+                    <FlatList
+                    ref={flatListRef}
+                    onContentSizeChange={() => flatListRef.current.scrollToEnd({animated:true})}
+                onScroll={onScroll}
+                   style={{height:windowWidth}}
+                   showsHorizontalScrollIndicator={false}
+                   pagingEnabled={true}
+                   data={mimages}
+                   horizontal={true}
+                   renderItem={({item,index}) => {
+                       return (
+                                <View>
+                                    <TouchableOpacity onPress={() => removeImage(index)} style={{position:'absolute',top:0,right:0,padding:9,zIndex:1}}>
+                                        <Icon name='delete' color='red' size={29} />
+                                        </TouchableOpacity>
+                                    <Image resizeMode='contain' source={item} style={{width:windowWidth-18,height:windowWidth}}/>
+                                </View>                                                             
+                                     
+                       )
+                   }}
+                   />
+                    </View>
+                    :
+                    <View style={{marginTop: 20 , alignItems: "center",height:windowWidth,justifyContent:'center'}}>
+                <TouchableOpacity onPress={() => {selectImage()}}>
+                 <Image
+                    style={{
+                    height: windowWidth/2.5,
+                    width: windowWidth/2.5,
+                  }}
+                     source={require('../../images/addImageIcon.png')}
+                 />
+                </TouchableOpacity>
+                <Text style={[styles.labels ]}>Add Product Images</Text>
+            </View>
+                )
+            }
+            <View style={{justifyContent:'center',alignItems:'center'}}>
+                   <FlatList
+                        horizontal
+                        data={mimages}
+                        renderItem ={({item,index}) => 
+                        index===si?
+                        <View style={{height:5.5,width:5.5,backgroundColor:'#ff6347',borderRadius:2.75,margin:5}}>
+                            </View> :
+                            <View style={{height:5,width:5,backgroundColor:'grey',borderRadius:2.5,margin:5}}>
+                                </View>
+                    }
+                        
+                       />
+                        </View>
+            {
+                mimages.length >0 &&
+                <View style={{alignItems:'center',marginTop:9}}>
+                    <TouchableOpacity onPress={selectImage} style={{alignItems:'center',width:windowWidth/2,backgroundColor:'#0ae38c',borderRadius:9}}>
+                <View style={{padding:9}}>
+                    <Text style={{color:'white',fontSize:19}}>Add Another Image</Text>
+                </View>
+                </TouchableOpacity>
+                    </View>
 
+            }
         
 
         <View style={{marginTop: 20}}>
@@ -132,7 +317,7 @@ function ProductDetails (props) {
                         setName(text)
                     }}
                     value={name}
-                    placeholder="Shop Address"
+                    placeholder="Product Name"
                 />
             </View>
         </View>
@@ -140,25 +325,28 @@ function ProductDetails (props) {
             <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Price</Text>
             <View>
                 <TextInput 
+                keyboardType='number-pad'
                     style={styles.input}
                     onChangeText={(text) => {
                         setPrice(text)
                     }}
                     value={price}
-                    placeholder="Price"
+                    placeholder="Product Price"
                 />
             </View>
         </View>
+        <ErrorModal color='#0ae387' visible={err} onClose={closeErr} heading={heading} error={error} />
         <View style={{marginTop: 20}}>
             <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Quantity</Text>
             <View>
                 <TextInput 
+                keyboardType='number-pad'
                     style={styles.input}
                     onChangeText={(text) => {
                         setQty(text)
                     }}
                     value={qty}
-                    placeholder="Shop Address"
+                    placeholder="Product Quantity"
                 />
             </View>
         </View>
@@ -194,7 +382,9 @@ function ProductDetails (props) {
             <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Product Description</Text>
             <View>
                 <TextInput 
-                    style={styles.input}
+                numberOfLines={5}
+                multiline={true}
+                    style={styles.input2}
                     onChangeText={(text) => {
                         setDescription(text)
                     }}
@@ -207,21 +397,29 @@ function ProductDetails (props) {
     </View>
     
 
-    <View style={{alignItems: "center" , marginTop: 15}}>
-            <TouchableOpacity style={styles.submit} onPress={() => {
-                editHandler()
-            }}>
+    {
+        !pl ?
+        <View style={{alignItems: "center" , marginTop: 15,marginBottom:45}}>
+            <TouchableOpacity style={styles.submit} onPress={uploadToFireabse}>
                  <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                      Save Changes
                  </Text>
             </TouchableOpacity>
         </View>  
+        :
+        <View style={{alignItems: "center" , marginTop: 25,marginBottom:45}}>
+           <ActivityIndicator color='#0ae387' size={45} />
+       </View>
+    }
 
+        
+</ScrollView>
+        }
         <View style={{
-            flex: 1,
-            alignItems: "flex-end",
-            justifyContent: "flex-end",
-            }}>
+                position:'absolute',
+                bottom:0,
+                right:0
+                }}>
        
         <Image
           style={{
@@ -231,8 +429,7 @@ function ProductDetails (props) {
           source={require('../../../assets/loginImages/AngleBottomRight.png')}
         />
         </View>
-</View> }
-       </>
+       </View>
     );
 }
 
@@ -264,6 +461,18 @@ const styles = StyleSheet.create({
     borderColor: "#7c7c7c",
     fontFamily: "Montserrat-Light",
     padding: 10
+  },
+  input2:{
+    //height: windowHeight*0.05,
+    width: windowWidth*0.8,
+    marginLeft: windowWidth*0.1 ,
+    marginTop: 8,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#7c7c7c",
+    fontFamily: "Montserrat-Light",
+    padding: 10,
+    textAlignVertical:'top'
   },
   bootombar: {
     width: windowWidth*0.8, 
