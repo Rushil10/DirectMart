@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <!-- <domain includeSubdomains="true">http://localhost:3000/</domain> -->
         <!-- <domain includeSubdomains="true">https://86a6fff5108c.ngrok.io/</domain> -->
+        <domain includeSubdomains="true">https://finalstobac.herokuapp.com/</domain>
     </domain-config>
 </network-security-config>
