@@ -9,6 +9,10 @@ import { connect } from 'react-redux';
 import url from '../../api/api'
 import Icon from 'react-native-vector-icons/AntDesign'
 import ErrorModal from "../consumer/ConsumerComponents/ErrorModal";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
+import Share from 'react-native-share'
+import messaging from '@react-native-firebase/messaging';
+import ImgToBase64 from 'react-native-image-base64';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,6 +31,7 @@ function generateString(length) {
 function ProductDetails (props) {
     
     const [id , setId] = useState("");
+    const [product,setPr] = React.useState({})
     const [name , setName] = useState("");
     const [price , setPrice] = useState("");
     const [qty , setQty] = useState("");
@@ -63,13 +68,42 @@ function ProductDetails (props) {
         }
     }, []);
 
+    const shareHandler = () => {
+        setSl(true)
+        console.log("called")
+        let img = ""
+       // setShareLoading(true);
+        ImgToBase64.getBase64String(product.product_image[0])
+        .then(base64String => {
+         img = 'data:image/jpeg;base64,' + base64String
+         Share.open({
+            title:`Share My Shop ${product.product_name}`,
+            message:`Checkout this product ${product.product_name} of my shop of just Rs ${product.product_price} on localapp by clicking on this link \n https://www.localapp.in/shop/product/${product.product_id} \n\n If you have not installed the app install it from playstore by this link `,
+            url:img
+        }
+        ).then((res) => {
+            console.log(res)
+            setSl(false)
+            //setShareLoading(false)
+        }).catch((err) => {
+            console.log(err)
+            setSl(false)
+            //setShareLoading(false)
+        })
+        })
+    }
+
     const [err,showErr] = React.useState(false);
     const [heading,setHeading] = React.useState('')
     const [error,setError] = React.useState('')
+    const [sl,setSl] = React.useState(false)
 
     const closeErr = () => {
         showErr(false)
     }
+    const [tot,setTot] = React.useState("")
+    const [inc,setInc] = React.useState("0")
+    const [dec,setDec] = React.useState("0")
 
     const selectImage = () => {
         ImageCropPicker.openPicker({
@@ -100,12 +134,14 @@ function ProductDetails (props) {
      const fetchProductDetails = (product) => {
 
         console.log("&*^" , product);
+        setPr(product)
         setId(product.product_id);
         setPrice(product.product_price.toString()); 
         setName(product.product_name);
         setValue(product.product_type)
         console.log("******");
         setQty(product.product_quantity.toString()); 
+        setTot(product.product_quantity.toString())
         setDescription(product.product_description)
         setImg(product.product_image[0])
         setPath(product.product_image[0])
@@ -114,7 +150,7 @@ function ProductDetails (props) {
 
      const uploadToFireabse = async() => {
         var images = []
-        if(name.length===0 || qty.length===0 || price.length===0 || description.length==0) {
+        if(name.length===0 || qty.length===0 || price.length===0 || description.length===0) {
             setHeading('Insufficient Data')
             setError('Name , Quantity , Price , Description and Type must Not be empty !')
             showErr(true)
@@ -125,6 +161,10 @@ function ProductDetails (props) {
         } else if(value.length===0){
             setHeading('Product Type')
             setError('Product Type must not be empty !')
+            showErr(true)
+        } else if(Number(price)===0) {
+            setHeading('Invalid Price')
+            setError('Product Price must be greater than 0 !')
             showErr(true)
         } else {
             setPl(true);
@@ -154,8 +194,8 @@ function ProductDetails (props) {
             product_description: description,
             product_image: images,
             product_type: value,
-            increase_quantity: 0,
-            decrease_quantity: 0
+            increase_quantity: inc,
+            decrease_quantity: dec
         }
 
         props.updateProducts(product)
@@ -298,9 +338,19 @@ function ProductDetails (props) {
             {
                 mimages.length >0 &&
                 <View style={{alignItems:'center',marginTop:9}}>
-                    <TouchableOpacity onPress={selectImage} style={{alignItems:'center',width:windowWidth/2,backgroundColor:'#0ae38c',borderRadius:9}}>
+                    <View style={{position:'absolute',top:0,right:25}}>
+                        <TouchableOpacity onPress={shareHandler} style={{width:45,height:45,padding:7.5,borderRadius:7.5,alignItems:'center',justifyContent:'center',backgroundColor:'#ff616d'}}>
+                        {
+                            !sl ?
+                            <Icon name='sharealt' size={25} color='white' />
+                            :
+                            <ActivityIndicator color='white' size={21} />
+                        }
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity onPress={selectImage} style={{alignItems:'center',width:windowWidth/2-45,backgroundColor:'#0ae38c',borderRadius:9}}>
                 <View style={{padding:9}}>
-                    <Text style={{color:'white',fontSize:19}}>Add Another Image</Text>
+                    <Text style={{color:'white',fontSize:19}}>Add Image</Text>
                 </View>
                 </TouchableOpacity>
                     </View>
@@ -342,11 +392,69 @@ function ProductDetails (props) {
                 <TextInput 
                 keyboardType='number-pad'
                     style={styles.input}
-                    onChangeText={(text) => {
+                    /* onChangeText={(text) => {
                         setQty(text)
-                    }}
+                    }} */
                     value={qty}
                     placeholder="Product Quantity"
+                />
+            </View>
+        </View>
+        <View style={{marginTop: 20}}>
+            <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Increase Quantity By</Text>
+            <View>
+                <TextInput 
+                keyboardType='number-pad'
+                    style={styles.input}
+                     onChangeText={(text) => {
+                        setInc(text)
+                        if(text.length>0){
+                            var newTot = Number(qty) + Number(text) - Number(dec)
+                        setTot(newTot.toString())
+                        } else {
+                            var newTot = Number(qty) - Number(dec)
+                            setTot(newTot.toString())
+                        }
+                    }} 
+                    value={inc}
+                    placeholder="Increase Quantity BY"
+                />
+            </View>
+        </View>
+        <View style={{marginTop: 20}}>
+            <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Decrease Quantity By</Text>
+            <View>
+                <TextInput 
+                keyboardType='number-pad'
+                    style={styles.input}
+                     onChangeText={(text) => {
+                        setDec(text)
+                        if(text.length>0){
+                            var newTot = Number(qty) - Number(text) + Number(inc)
+                        setTot(newTot.toString())
+                        } else {
+                            var newTot = Number(qty) + Number(inc)
+                            setTot(newTot.toString())
+                        }
+                    }} 
+                    value={dec}
+                    placeholder="Decrease Quantity By"
+                />
+            </View>
+        </View>
+        <View style={{marginTop: 20}}>
+            <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Final Quantity</Text>
+            <View>
+                <TextInput 
+                keyboardType='number-pad'
+                    style={styles.input}
+                     /* onChangeText={(text) => {
+                        setDec(text)
+                        var newTot = Number(tot) - Number(text)
+                        setTot(newTot.toString())
+                    }}  */
+                    value={tot}
+                    placeholder="Final Quantity"
                 />
             </View>
         </View>

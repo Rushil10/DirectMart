@@ -136,6 +136,10 @@ function AddProducts (props) {
             setHeading('Product Type')
             setError('Product Type must not be empty !')
             showErr(true)
+        } else if(qty==='0' || price==='0') {
+            setHeading('Invalid Data')
+            setError('Price And Quantity cannot be 0 !')
+            showErr(true)
         } else {
             setPl(true);
             for(var i=0;i<mimages.length;i++){

@@ -71,7 +71,7 @@ function SellerProfile(props) {
                 <Image
                     style={{
                         height: windowHeight*0.4,
-                        width: windowWidth*0.4,
+                        width: windowWidth,
                         resizeMode:'cover'
                     }}
                     source={{
