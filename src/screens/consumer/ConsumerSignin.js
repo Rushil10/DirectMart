@@ -27,6 +27,8 @@ function ConsumerSignin(props) {
         showErr(false)
     }
 
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
     var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
 
     const signin = () => {
@@ -48,7 +50,8 @@ function ConsumerSignin(props) {
                 showErr(true)
                 setLoading(false)
             }
-        } else if(!email.match(pattern)) {
+        } else if(!re.test(email)) {
+            console.log(re.test(email))
             setHeading('Invalid Credential')
                 setError('Enter a Valid Email !')
                 showErr(true)
@@ -130,7 +133,7 @@ function ConsumerSignin(props) {
                 showErr(true)
                 setLoading(false)
             }
-        } else if(!email.match(pattern)) {
+        } else if(!email.match(re)) {
             setHeading('Invalid Credential')
                 setError('Enter a Valid Email !')
                 showErr(true)

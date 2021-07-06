@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import { setLocation } from '../redux/consumer/actions/latlngactions';
 import { setCartProducts } from '../redux/consumer/actions/cartActions';
 import { CommonActions } from "@react-navigation/native";
+import LinearGradient from 'react-native-linear-gradient';
 
 const {height,width} = Dimensions.get('window')
 
@@ -113,9 +114,20 @@ function LoadingScreen(props) {
     },[])
 
     return (
-        <View style={{alignItems:'center'}}>
-            <Image source={require('../images/si.gif')} style={{height:width,width:width,resizeMode:'contain'}}/>
-            <Image source={require('../images/giphy.gif')} style={{height:width+25,width:width}}/>
+        <View style={{alignItems:'center',flex:1}}>
+            {/* <Image source={require('../images/si.gif')} style={{height:width,width:width,resizeMode:'contain'}}/>
+            <Image source={require('../images/giphy.gif')} style={{height:width+25,width:width}}/> */}
+            <LinearGradient colors={['#43cea2', '#185a9d']} style={{flex:1,width:width,justifyContent:'center',alignItems:'center'}}>
+                <Text style={{fontSize:41,color:'white',fontFamily: "Montserrat-Bold" }}>DirectMart</Text>
+                <Text style={{fontSize:21,color:'white',fontFamily: "Montserrat-Medium",padding:15,paddingTop:19,paddingBottom:0,alignContent:'center',alignSelf:'center' }} >Local Shops And Small Business</Text>
+                <Text style={{fontSize:21,color:'white',fontFamily: "Montserrat-Medium",padding:5,alignContent:'center',alignSelf:'center' }} >Need Your Support Now</Text>
+                <View style={{position:'absolute',bottom:9,alignItems:'center'}}>
+                    <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Image source={require('../images/ind.jpg')} style={{height:29,width:45,marginRight:9,borderRadius:2.5}} />
+                        <Text style={{fontSize:15,color:'white',fontFamily: "Montserrat-Medium"}}>Made In India with Love</Text>
+                        </View>
+                </View>
+            </LinearGradient>
         </View>
     )
 }

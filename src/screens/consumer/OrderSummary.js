@@ -179,14 +179,14 @@ function OrderSummary(props) {
                     <View>
                         <Text style={{fontSize:22.5,color:'black',fontFamily: "Montserrat-Medium"}}>Payment Method</Text>
                         <View>
-                    {
+                    {/* {
                         order[0].shop_upiId!=='undefined' &&
                         <TouchableWithoutFeedback onPress={makeUpiPayment}>
                             <View style={{padding:7.5,alignItems:'center',backgroundColor:"#ff6347",borderRadius:9}}>
                                 <Text style={{fontSize:21.5,color:'white',fontFamily: "Montserrat-Medium"}}>Pay Using UPI</Text>
                             </View>
                         </TouchableWithoutFeedback>
-                    }
+                    } */}
                 </View>
                 <View style={{marginTop:9}}>
                 <TouchableWithoutFeedback onPress={createTwoButtonAlert}>

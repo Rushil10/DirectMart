@@ -13,7 +13,8 @@ function SellerSignin (props) {
   const [err,showErr] = React.useState(false);
   const [heading,setHeading] = React.useState('')
   const [error,setError] = React.useState('')
-
+  
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const closeErr = () => {
     showErr(false)

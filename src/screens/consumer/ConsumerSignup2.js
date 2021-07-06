@@ -92,8 +92,17 @@ function ConsumerSignup2(props) {
             }
         }).then(async(res) => {
             console.log(res.data);
-            var token = res.data.token;
+            if(res.data.error){
+                setHeading('Invalid Account')
+                setError(res.data.error)
+                showErr(true)
+                setCll(false)
+            } else {
+                var token = res.data.token;
             await AsyncStorage.setItem('user_token', token)
+            }
+        }).catch(err => {
+
         })
     }
 
