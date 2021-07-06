@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image, TextInput, TouchableOpacity , AsyncStorage , Alert} from 'react-native';
+import { Text , View , Dimensions , StyleSheet , Image, TextInput, TouchableOpacity , AsyncStorage , Alert, ActivityIndicator} from 'react-native';
 import CheckBox from 'react-native-check-box'
 
 import axios from 'axios';
@@ -9,14 +9,36 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import messaging from '@react-native-firebase/messaging';
 import jwtDecode from 'jwt-decode';
+import ErrorModal from '../screens/consumer/ConsumerComponents/ErrorModal';
 
 class SigninComponent extends Component {
 
-   loginHandler = () => {    
-
+  checkCredentials = () => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     this.setState({
-      loading: true
+      //loading: true,
+      bl:true
     })
+    if(this.state.email.length === 0 || this.state.pass.length===0) {
+      this.setState({
+        heading:'Invalid Data',
+        error:'Email and Password must not be empty !',
+        err:true,
+        bl:false
+      })
+    } else if (!re.test(this.state.email)){
+      this.setState({
+        heading:'Invalid Email',
+        error:'Enter a Valid Email !',
+        err:true,
+        bl:false
+      })
+    } else {
+      this.loginHandler()
+    }
+  }
+
+   loginHandler = () => {    
 
     var seller = {
       shop_email:this.state.email,
@@ -28,7 +50,8 @@ class SigninComponent extends Component {
   axios.post(`${url}/shop/login`,seller)
     .then(async(res) => {
         console.log(res.data);
-        var token = res.data.token;
+        if(res.data.token){
+          var token = res.data.token;
         await AsyncStorage.setItem('shop_token',token);
         const fcm_token = await messaging().getToken();
       console.log(fcm_token)
@@ -51,6 +74,14 @@ class SigninComponent extends Component {
             routes: [{name: 'Seller'}],
         });
       })
+        } else {
+          this.setState({
+            heading:'Invalid User',
+            error:res.data.error || 'Login Error',
+            err:true,
+            bl:false
+          })
+        }
     })
 
     setTimeout(() => {
@@ -60,14 +91,24 @@ class SigninComponent extends Component {
     },3000)
   }
 
+  closeErr = () => {
+    this.setState({
+      err:false
+    })
+  }
+
   
-    
+  static re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;    
 
     state = {
        isChecked: false ,
        loading: false,
        email: "",
-       pass: ""
+       pass: "",
+       bl:false,
+       err:false,
+       heading:'Error',
+       error:'Login Error',
      };
 
   render() {
@@ -77,8 +118,9 @@ class SigninComponent extends Component {
       <Image source={require('../../assets/loader/1490.gif')} resizeMode='contain' style={{width:windowWidth}} />
   </View>  : 
         <View>
+          <ErrorModal visible={this.state.err} color='#0ae38c' onClose={this.closeErr} heading={this.state.heading} error={this.state.error} />
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
-                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>Welcome to SHOPY!</Text>
+                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>Welcome to DirectMart !</Text>
                 <Text style={styles.labels}>Login to your account</Text>
             </View>
             <View style={{marginTop: 20}}>
@@ -125,26 +167,33 @@ class SigninComponent extends Component {
             </View>
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.025}}>
              <View style={styles.bootombar}>
-                 <View style={{marginLeft: 5}}>
+                 {/* <View style={{marginLeft: 5}}>
                    <Text style={{color: "#0ae38c" , fontFamily: "Montserrat-Light" , }}>Forgot Password ?</Text>
-                 </View>
+                 </View> */}
                      <View>
-                        <Text style={{color: "grey" , fontFamily: 'Montserrat-Light'}}>Don't have an account</Text>
+                     <TouchableOpacity onPress={() => {this.props.signIn.navigate("SellerSignUp" , {type: "new"})}}>
+                        <Text style={{color: "gray",fontSize:16.5 , fontFamily: 'Montserrat-Medium'}}>Don't have an account ? Sign up</Text>
+                        </TouchableOpacity>
                      </View>
              </View>
-             <View style={{alignItems: "flex-end" , marginRight: windowWidth*0.1 }}>
+            {/*  <View style={{alignItems: "flex-end" , marginRight: windowWidth*0.1 }}>
                     <TouchableOpacity onPress={() => {this.props.signIn.navigate("SellerSignUp" , {type: "new"})}}>
                      <Text style={{color: "grey" , fontFamily: 'Montserrat-Light' }}>Sign Up</Text>
                     </TouchableOpacity>
-                   </View>
+                   </View> */}
             </View>
            <View style={{alignItems: "center" , marginTop: 15}}>
                 <TouchableOpacity style={styles.submit} onPress={() => {
-                  this.loginHandler();
+                  this.checkCredentials()
                 }}>
-                     <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
+                     {
+                       !this.state.bl ?
+                       <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                          Login
                      </Text>
+                     :
+                     <ActivityIndicator color='white' size='large' />
+                     }
                 </TouchableOpacity>
             </View> 
             
