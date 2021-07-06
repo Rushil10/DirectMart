@@ -23,6 +23,19 @@ function SellerSignUp (props) {
     const closeErr = () => {
         showErr(false)
     }
+
+    React.useEffect(() => {
+      if(props.route.params.type === "edit")
+      {
+        let l = {
+            latitude: props.route.params.shop_latitude,
+            longitude: props.route.params.shop_longitude
+          }
+          console.log(location);
+        setLocation(l);
+        console.log(location);
+      }
+    },[])
   
   const submitHandler = async () => {
     if(location){
@@ -39,6 +52,7 @@ function SellerSignUp (props) {
     let desc  = props.route.params.desc 
     let time  = props.route.params.time 
     let id    = props.route.params.id 
+    let image    = props.route.params.image 
     let longi = location.longitude
     let lati  = location.latitude
 
@@ -55,11 +69,12 @@ function SellerSignUp (props) {
      shop_upiId     : id,
      shop_email     : uname ,
      shop_password  : pass,
-     shop_description : desc
+     shop_description : desc,
+     shop_image : image
     }
 
 
-    if(props.route.params.type == "edit") {
+    if(props.route.params.type === "edit") {
       var token = await AsyncStorage.getItem('shop_token')
         console.log("HERE BABY !!!!!!!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@@@@@@");
         
@@ -163,6 +178,7 @@ function SellerSignUp (props) {
                         timeout: 15000,
                     }).then((res) => {
                       console.log(location);
+                      console.log(res);
                       setLocation(res);
                       setLoader(false);
                     }).catch(err => {
@@ -184,13 +200,38 @@ function SellerSignUp (props) {
 
                 {/* Add crousal for image and Latitude and Longitude use location */}
 
+                {props.route.params.type === "edit" ?  <View>
+                    <TouchableOpacity style={{alignItems: "center"}} onPress={() => {
+                      setLoader(true);
+                      
+                      GetLocation.getCurrentPosition({
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                    }).then((res) => {
+                      console.log(location);
+                      console.log(res);
+                      setLocation(res);
+                      setLoader(false);
+                    }).catch(err => {
+                      setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            showErr(true)
+                      setLoader(false)
+                    })
+                    }}>
+                      <View style={{height: windowHeight*0.1 , width: windowWidth*0.9 ,alignItems: "center" , justifyContent: "center", backgroundColor: "#0ae38c" , marginTop: 20 , borderRadius: 10}}>
+                        <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }}>Provide new location</Text>
+                      </View>
+                    </TouchableOpacity>
+                </View> : <View /> }
+
                
            <View style={{alignItems: "center" , marginTop: 25}}>
                 <TouchableOpacity style={styles.submit} onPress={() => {  
                     submitHandler()
                 }}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
-                         {props.route.params.type == "edit" ? "Save Changes" : "Submit"}
+                         {props.route.params.type === "edit" ? "Save Changes" : "Submit"}
                      </Text>
                 </TouchableOpacity>
             </View>      

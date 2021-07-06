@@ -19,14 +19,14 @@ function SellerSignUp2 (props) {
     const [err,showErr] = React.useState(false);
     const [heading,setHeading] = React.useState('')
     const [error,setError] = React.useState('')
+    let data = props.route.params.decode;
 
       React.useEffect(() => {
         // console.log(props.route.params.type);
-        if(props.route.params.type = "edit")
+        if(props.route.params.type === "edit")
         {
             //WE CAN EDIT PROFILE FROM HERE
             console.log(props.route.params.decode);
-            let data = props.route.params.decode;
             setAdd(data.shop_location);
             setNum(data.shop_contact);
             setDesc(data.shop_description)
@@ -55,6 +55,9 @@ function SellerSignUp2 (props) {
                 uname : props.route.params.uname,
                 pass  : props.route.params.pass ,
                 rpass : props.route.params.rpass,
+                image : props.route.params.image,
+                shop_latitude: data.shop_latitude,
+                shop_longitude: data.shop_longitude,
                 add   : add ,
                 num   : num ,
                 desc  : desc,
