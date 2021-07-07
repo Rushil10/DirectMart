@@ -10,6 +10,7 @@ import { setLocation } from '../../redux/consumer/actions/latlngactions';
 import ErrorModal from './ConsumerComponents/ErrorModal';
 import messaging from '@react-native-firebase/messaging';
 import jwtDecode from 'jwt-decode';
+import Geolocation from 'react-native-geolocation-service';
 
 const {height,width} = Dimensions.get('window')
 function ConsumerSignup2(props) {
@@ -37,7 +38,36 @@ function ConsumerSignup2(props) {
         const contact = props.route.params.contact
         const imgUrl = props.route.params.imgUrl
         setCll(true);
-        GetLocation.getCurrentPosition({
+        Geolocation.getCurrentPosition(
+            async(position) => {
+              console.log(position.coords);
+              var location = position.coords
+              setLongitude(location.longitude)
+            setLatitude(location.latitude)
+            if(flat.length===0 || landmark.length===0 || area.length===0 || town.length===0 || aname.length===0){
+                setHeading('Invalide Address')
+            setError('Flat , Landmark , Area , Town and Name cannot be empty !')
+            showErr(true)
+            setCll(false);
+            } else {
+                await AsyncStorage.setItem('latitude',location.latitude.toString())
+            await AsyncStorage.setItem('longitude',location.longitude.toString())
+            await doSignup(location.latitude,location.longitude)
+            await props.setLocation(location.latitude,location.longitude)
+            addAddress(location.latitude,location.longitude)
+            }
+        },
+            (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+              setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            showErr(true)
+            setCll(false);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+        /* GetLocation.getCurrentPosition({
             enableHighAccuracy: true,
             timeout: 15000,
         }).then(async(location) => {
@@ -64,7 +94,7 @@ function ConsumerSignup2(props) {
             setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
             showErr(true)
             setCll(false);
-        })
+        }) */
     }
 
     const doSignup = async(longitude,latitude) => {
@@ -157,7 +187,7 @@ function ConsumerSignup2(props) {
                 setCll(false);
                 props.navigation.reset({
                     index: 0,
-                    routes: [{name: 'Consumer'}],
+                    routes: [{name: 'ConsumerSlides'}],
                 });
             })
         })

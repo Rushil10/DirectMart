@@ -54,6 +54,7 @@ import AddAddress from './src/screens/consumer/AddAddress';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ConsumerSearch from './src/screens/consumer/ConsumerSearch';
 import ConsumerProductDetails from "./src/screens/consumer/ProductDetails";
+import ConsumerSlides from "./src/screens/consumer/CounsumerSlides";
 
 
 
@@ -391,6 +392,7 @@ function App() {
         <Stack.Screen name="AddProducts" component={AddProducts} />
         <Stack.Screen name="OrderDetails" component={OrderDetails} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen name="ConsumerSlides" component={ConsumerSlides} />
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>

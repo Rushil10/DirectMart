@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar } from 'react-native';
+import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar,Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './ConsumerComponents/Header';
 import axios from 'axios';
 import { url } from '../../api/api';
 import ShopCard from '../../components/ShopCard';
+import { Linking } from 'react-native';
+import VersionCheck from 'react-native-version-check';
 
 const {height,width} = Dimensions.get('window')
 
@@ -40,6 +42,21 @@ function NearbyShops(props) {
         })
     }
 
+    const createTwoButtonAlert = (res) =>
+    Alert.alert(
+        "Update Available",
+        "New Version of App is available",
+        [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text: "Update", onPress: () => Linking.openURL(res.storeUrl) }
+        ],
+        { cancelable: true }
+    );
+
     const getToken = async() => {
         setL(true);
         var token = await AsyncStorage.getItem('user_token');
@@ -49,6 +66,13 @@ function NearbyShops(props) {
     }
 
     React.useEffect(() => {
+        VersionCheck.needUpdate()
+            .then(async res => {
+                //createTwoButtonAlert(res)
+                if (res.isNeeded) {
+                    createTwoButtonAlert(res);  // open store if update is needed.
+                }
+        });
         getNearByShops()
     },[])
 

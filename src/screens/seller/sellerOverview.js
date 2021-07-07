@@ -7,11 +7,13 @@ import Header from '../consumer/ConsumerComponents/Header';
 import { url } from '../../api/api';
 import ListComponent from '../../components/ListComponent'
 import { fetchOrders , orderReadyForDelivery } from '../../redux/seller/actions/ordersActions';
+import { Linking } from 'react-native';
+import VersionCheck from 'react-native-version-check';
 
 const {height,width} = Dimensions.get('window')
 
 function SellerScreen(props) {
-
+ 
     const [t,setT] = React.useState('') 
     const [products , setProducts] = React.useState([]);
     const [loading , setLoading] = React.useState(false);
@@ -22,8 +24,30 @@ function SellerScreen(props) {
         setT(value);
     }
 
+    const createTwoButtonAlert = (res) =>
+    Alert.alert(
+        "Update Available",
+        "New Version of App is available",
+        [
+            {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+            },
+            { text: "Update", onPress: () => Linking.openURL(res.storeUrl) }
+        ],
+        { cancelable: true }
+    );
+
     React.useEffect(() => {
         setLoading(true) 
+        VersionCheck.needUpdate()
+            .then(async res => {
+                //createTwoButtonAlert(res)
+                if (res.isNeeded) {
+                    createTwoButtonAlert(res);  // open store if update is needed.
+                }
+        });
         getToken();
         fetchProducts();
         setLoading(false)
