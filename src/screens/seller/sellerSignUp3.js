@@ -112,7 +112,7 @@ function SellerSignUp (props) {
           await setFcmToken(token)
           props.navigation.reset({
             index: 0,
-            routes: [{name: 'Seller'}],
+            routes: [{name: 'SellerSlides'}],
         });
       }) 
         }
@@ -121,7 +121,7 @@ function SellerSignUp (props) {
 
      else {
       setHeading('Location Unaccessible')
-            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            setError('Please Turn On your location to complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
             showErr(true)
                       setLoader(false)
     }
