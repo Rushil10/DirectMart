@@ -83,6 +83,8 @@ function SellerSignUp (props) {
         }
     }, []);
 
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
     var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
 
     const selectImage = () => {
@@ -118,6 +120,10 @@ function SellerSignUp (props) {
             console.log("*");
         } else {
             console.log("No image");
+            if(props.route.params.type==='edit'){
+                console.log(mimages)
+                imgNew = mimages[0].uri
+            }
         }
     }
     
@@ -164,7 +170,8 @@ function SellerSignUp (props) {
         var decode = jwtDecode(token);
         console.log(decode);
         let setter = {
-            uri: decode.shop_image
+            uri: decode.shop_image,
+            isUploaded:true
         }
         setSname(decode.shop_name)
         setOname(decode.shop_owner)
@@ -181,11 +188,23 @@ function SellerSignUp (props) {
             console.log(props.route.params.type);
             showErr(true)
             //setLoading(false)
-        } else if(!uname.match(pattern)) {
+        } else if(!re.test(uname)) {
             setHeading('Invalid Credential')
                 setError('Enter a Valid Email !')
                 showErr(true)
                 //setLoading(false)
+        } else if(rpass!==pass) {
+            setHeading('Invalid Credential')
+                setError('Password must be same !')
+                showErr(true)
+        } else if(pass.length<=6){
+            setHeading('Invalid Credential')
+                setError('Password must be atleast 7 characters long !')
+                showErr(true)
+        } else if(pass.indexOf(' ')>=0) {
+            setHeading('Invalid Credential')
+                setError('Password must not contain spaces !')
+                showErr(true)
         } else {
             setLoading(true)
             var token = await AsyncStorage.getItem('shop_token');
@@ -215,8 +234,8 @@ function SellerSignUp (props) {
                      <Text style={styles.labels}>Uploading Image...</Text>
                 </View> :
       
-        <ScrollView style={{flex: 1}}>
-            <View>
+        <View style={{flex: 1}}>
+            <View style={{position:'absolute',top:0,left:0}}>
             <Image
               style={{
                 height: windowHeight*0.08,
@@ -229,11 +248,11 @@ function SellerSignUp (props) {
 
             <KeyboardAvoidingView>
             <ScrollView>
-            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
+            <ErrorModal color='#0ae38c' visible={err} onClose={closeErr} heading={heading} error={error} />
          
             <View>
-            <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
-                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>{props.route.params.type === "edit" ? "Edit your profile" :"New to SHOPY" } </Text>
+            <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.08}}>
+                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>{props.route.params.type === "edit" ? "Edit your profile" :"New to DirectMart" } </Text>
                 <Text style={styles.labels}>{props.route.params.type === "edit" ? "you can edit all your shop details here !" :"Register Here" }</Text>
             </View>
             {
@@ -373,7 +392,7 @@ function SellerSignUp (props) {
                     /> 
                 </View>
             </View> : <View /> }
-           <View style={{alignItems: "center" , marginTop: 15}}>
+           <View style={{alignItems: "center" , marginTop: 15,marginBottom:29}}>
                 <TouchableOpacity style={styles.submit} onPress={goToSignup2}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                          Next
@@ -385,9 +404,7 @@ function SellerSignUp (props) {
     </KeyboardAvoidingView>
 
             <View style={{
-                flex: 1,
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
+                position:'absolute',bottom:0,right:0
                 // marginTop: windowHeight*0.1
                 }}>
            
@@ -401,7 +418,7 @@ function SellerSignUp (props) {
             />
             </View>
 
-        </ScrollView>
+        </View>
     );
 }
 

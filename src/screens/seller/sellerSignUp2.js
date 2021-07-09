@@ -49,30 +49,46 @@ function SellerSignUp2 (props) {
             setError('Contact Number must be of 10 digits !')
             showErr(true)
         } else {
-            props.navigation.navigate("SellerSignUp3" , {
-                sname : props.route.params.sname,
-                oname : props.route.params.oname,
-                uname : props.route.params.uname,
-                pass  : props.route.params.pass ,
-                rpass : props.route.params.rpass,
-                image : props.route.params.image,
-                shop_latitude: data.shop_latitude,
-                shop_longitude: data.shop_longitude,
-                add   : add ,
-                num   : num ,
-                desc  : desc,
-                time  : time,
-                id    : id ,
-                type: props.route.params.type
-            })
+            if(props.route.params.type === "edit"){
+                props.navigation.navigate("SellerSignUp3" , {
+                    sname : props.route.params.sname,
+                    oname : props.route.params.oname,
+                    uname : props.route.params.uname,
+                    pass  : props.route.params.pass ,
+                    rpass : props.route.params.rpass,
+                    image : props.route.params.image,
+                    shop_latitude: data.shop_latitude|| '',
+                    shop_longitude: data.shop_longitude || '',
+                    add   : add ,
+                    num   : num ,
+                    desc  : desc,
+                    time  : time,
+                    id    : id ,
+                    type: props.route.params.type
+                })
+            } else {
+                props.navigation.navigate("SellerSignUp3" , {
+                    sname : props.route.params.sname,
+                    oname : props.route.params.oname,
+                    uname : props.route.params.uname,
+                    pass  : props.route.params.pass ,
+                    rpass : props.route.params.rpass,
+                    image : props.route.params.image,
+                    add   : add ,
+                    num   : num ,
+                    desc  : desc,
+                    time  : time,
+                    id    : id ,
+                    type: props.route.params.type
+                })
+            }
         }
     }
 
     return (
-        <ScrollView style={{flex: 1}}>
-           <KeyboardAvoidingView>
-           <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
-           <View>
+        <View style={{flex: 1}}>
+           <ErrorModal color='#0ae38c' visible={err} onClose={closeErr} heading={heading} error={error} />
+           <View style={{position:'absolute',top:0}}>
             <Image
               style={{
                 height: windowHeight*0.08,
@@ -83,8 +99,9 @@ function SellerSignUp2 (props) {
             />
             </View>
             
-            <View>
-            <View style={{marginTop: 20}}>
+            <ScrollView style={{flex:1}}>
+            <KeyboardAvoidingView>
+            <View style={{marginTop: windowHeight*0.08}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Shop Address</Text>
                 <View>
                     <TextInput 
@@ -103,6 +120,7 @@ function SellerSignUp2 (props) {
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Contact No.</Text>
                 <View>
                     <TextInput 
+                    keyboardType='numeric'
                         style={styles.input}
                         onChangeText={(text) => {
                             setNum(text)
@@ -128,7 +146,7 @@ function SellerSignUp2 (props) {
                     /> 
                 </View>
             </View>
-            <View style={{marginTop: 20}}>
+            {/* <View style={{marginTop: 20}}>
                 <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Shop Timings</Text>
                 <View>
                     <TextInput 
@@ -140,9 +158,9 @@ function SellerSignUp2 (props) {
                         placeholder="Shop Timings" 
                     /> 
                 </View>
-            </View>
+            </View> */}
             <View style={{marginTop: 20}}>
-                <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>UPI-ID / PAYTM / PHONEPAY / GOOGLEPAY</Text>
+                <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>UPI-ID </Text>
                 <View>
                     <TextInput 
                         style={styles.input}
@@ -150,9 +168,11 @@ function SellerSignUp2 (props) {
                             setId(text)
                         }}
                         value={id}
-                        placeholder="UPI-ID / PAYTM / PHONEPAY / GOOGLEPAY" 
+                        placeholder="UPI-ID" 
                     /> 
                 </View>
+                <Text style={{marginLeft:0.1*windowWidth,marginTop:9}}>This can be Gpay , Paytm or Phonepe upi id.</Text>
+                <Text style={{marginLeft:0.1*windowWidth}}>Upi Id is not mandatory</Text>
             </View>
            <View style={{alignItems: "center" , marginTop: 15}}>
                 <TouchableOpacity style={styles.submit} onPress={goToSignup3}>
@@ -160,14 +180,14 @@ function SellerSignUp2 (props) {
                          Next
                      </Text>
                 </TouchableOpacity>
-            </View>      
-        </View>
+            </View>   
+            </KeyboardAvoidingView>   
+        </ScrollView>
 
             <View style={{
-                flex: 1,
-                alignItems: "flex-end",
-                justifyContent: "flex-end",
-                // marginTop: windowHeight*0.1
+                position:'absolute',
+                bottom:0,
+                right:0
                 }}>
            
             <Image
@@ -179,9 +199,8 @@ function SellerSignUp2 (props) {
               source={require('../../../assets/loginImages/AngleBottomRight.png')}
             />
             </View>
-           </KeyboardAvoidingView>
 
-        </ScrollView>
+        </View>
     );
 }
 

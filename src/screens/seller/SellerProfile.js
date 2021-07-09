@@ -23,11 +23,12 @@ function SellerProfile(props) {
         var token = await AsyncStorage.getItem('shop_token');
         var decode = jwtDecode(token);
         setInfo(decode);
+        console.log(decode)
     }
 
     React.useEffect(() => {
         getDetails()
-    })
+    },[])
 
     const shareHandler = () => {
         let img = ""
@@ -91,32 +92,31 @@ function SellerProfile(props) {
                 <Text style={styles.labels}>{info.shop_name}</Text>
             </View>
 
-            <View style={{ flexDirection: "row"}}>
+            <View style={{ flexDirection: "row",alignItems:'center',padding:9}}>
                 
-            <View style={{flex: 0.5 ,alignItems: "center" , marginLeft: 20, justifyContent: "center"}}>
+            <View style={{justifyContent: "center"}}>
                 <View>
                     <Text style={styles.text}>
                         {info.shop_owner}
                     </Text>
                 </View>
-                <View>
+                 <View>
                     <Text style={styles.text}>
                          {info.shop_email}
                     </Text>
                 </View>
             </View>
+            
 
-            <View style={{flex: 0.5 ,marginRight: windowWidth*0.08 , alignItems: "flex-end"}}>
+            <View style={{flex: 1 ,justifyContent:'center',alignItems: "flex-end"}}>
                 <Image
                     style={{
-                        height: windowHeight*0.12      ,
-                        width: windowHeight*0.12 ,
-                        marginTop: 20
+                        height:75,
+                        width:75
                     }}
                     source={require('../../images/user.png')}
                 />
             </View>
-
             </View>
 
                     {/* order status */}
@@ -152,7 +152,7 @@ function SellerProfile(props) {
 
             <View style={{}}>
 
-            <View style={{marginLeft : windowWidth*0.05 , flexDirection: "row" , marginTop: 10}}>
+            {/* <View style={{marginLeft : windowWidth*0.05 , flexDirection: "row" , marginTop: 10}}>
             <MaterialCommunityIcons name="clock-time-four-outline" color={"black"} size={24} />
             <View style={{justifyContent: "center" , marginLeft: 10}}>
                 <Text style={styles.text}>
@@ -162,7 +162,7 @@ function SellerProfile(props) {
                     {info.shop_timing}
                 </Text>
             </View>
-            </View>
+            </View> */}
 
             <View style={{marginLeft : windowWidth*0.05 , flexDirection: "row" , marginTop: 10}}>
             <MaterialCommunityIcons name="map-marker" color={"black"} size={24} />
@@ -170,7 +170,7 @@ function SellerProfile(props) {
                 <Text style={styles.text}>
                     LOCATION 
                 </Text>
-                <Text style={[styles.text]}>
+                <Text numberOfLines={5} style={[styles.text]}>
                     {info.shop_location}
                 </Text>
             </View>

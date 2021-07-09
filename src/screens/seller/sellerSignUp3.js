@@ -7,6 +7,7 @@ import {url} from '../../api/api'
 import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 import messaging from '@react-native-firebase/messaging';
 import jwtDecode from 'jwt-decode';
+import Geolocation from 'react-native-geolocation-service';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,6 +16,7 @@ function SellerSignUp (props) {
   
   const[location , setLocation] = useState(null)
   const[loader , setLoader] = useState(false)
+  const [fl,setFl] = React.useState(false)
 
   const [err,showErr] = React.useState(false);
     const [heading,setHeading] = React.useState('')
@@ -40,7 +42,7 @@ function SellerSignUp (props) {
   const submitHandler = async () => {
     if(location){
 
-      
+      setFl(true)
 
       let sname = props.route.params.sname
     let oname = props.route.params.oname
@@ -85,13 +87,20 @@ function SellerSignUp (props) {
           }
       }).then(async(res) => {
           console.log(res.data);
-          var token = res.data.token;
+          if(res.data.token){
+            var token = res.data.token;
           await AsyncStorage.setItem('shop_token', token)
           await setFcmToken(token)
+          setFl(false)
           props.navigation.reset({
             index: 0,
             routes: [{name: 'Seller'}],
         });
+          } else if (res.data.error) {
+            setFl(false)
+          } else {
+            setFl(false)
+          }
       }) 
 
 
@@ -107,6 +116,7 @@ function SellerSignUp (props) {
         }
       }).then(async(res) => {
           console.log(res.data);
+         if(res.data.token){
           var token = res.data.token;
           await AsyncStorage.setItem('shop_token', token)
           await setFcmToken(token)
@@ -114,6 +124,17 @@ function SellerSignUp (props) {
             index: 0,
             routes: [{name: 'SellerSlides'}],
         });
+         } else if (res.data.error) {
+          setFl(false)
+          setHeading('Signup Error !')
+          setError(res.data.error)
+          showErr(true)
+        } else {
+          setFl(false)
+          setHeading('Signup Error !')
+          setError('Error During SIgnup ! PLease Try Again')
+          showErr(true)
+        }
       }) 
         }
 
@@ -121,7 +142,7 @@ function SellerSignUp (props) {
 
      else {
       setHeading('Location Unaccessible')
-            setError('Please Turn On your location to complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require your location to make your shop available to consumer in your 15km range . \n\n Thank You')
             showErr(true)
                       setLoader(false)
     }
@@ -150,7 +171,7 @@ function SellerSignUp (props) {
     return (
         <View style={{flex: 1}}>
             <View>
-            <ErrorModal visible={err} onClose={closeErr} heading={heading} error={error} />
+            <ErrorModal color='#0ae38c' visible={err} onClose={closeErr} heading={heading} error={error} />
             <Image
               style={{
                 height: windowHeight*0.08,
@@ -172,8 +193,20 @@ function SellerSignUp (props) {
                 </View> : <View>
                     <TouchableOpacity style={{alignItems: "center"}} onPress={() => {
                       setLoader(true);
-                      
-                      GetLocation.getCurrentPosition({
+                      Geolocation.getCurrentPosition(async(position) => {
+                        var location = position.coords
+                        setLocation(location);
+                      setLoader(false);
+                      },
+                      (error) => {
+                        setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require your location to make your shop available to consumer in your 15km range . \n\n Thank You')
+            showErr(true)
+                      setLoader(false)
+                      },
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                      )
+                      /* GetLocation.getCurrentPosition({
                         enableHighAccuracy: true,
                         timeout: 15000,
                     }).then((res) => {
@@ -183,10 +216,10 @@ function SellerSignUp (props) {
                       setLoader(false);
                     }).catch(err => {
                       setHeading('Location Unaccessible')
-            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require your location to make your shop available to consumer in your 15km range . \n\n Thank You')
             showErr(true)
                       setLoader(false)
-                    })
+                    }) */
                     }}>
                       <View style={{height: windowHeight*0.07 , width: windowWidth*0.5 ,alignItems: "center" , justifyContent: "center", backgroundColor: "#0ae38c" , marginTop: 20 , borderRadius: 20}}>
                         <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }}>Press Here</Text>
@@ -203,8 +236,20 @@ function SellerSignUp (props) {
                 {props.route.params.type === "edit" ?  <View>
                     <TouchableOpacity style={{alignItems: "center"}} onPress={() => {
                       setLoader(true);
-                      
-                      GetLocation.getCurrentPosition({
+                      Geolocation.getCurrentPosition(async(position) => {
+                        var location = position.coords
+                        setLocation(location);
+                      setLoader(false);
+                      },
+                      (error) => {
+                        setHeading('Location Unaccessible')
+            setError('Please Turn On your location to setup your address and complete signup.\n\nWe require your location to make your shop available to consumer in your 15km range . \n\n Thank You')
+            showErr(true)
+                      setLoader(false)
+                      },
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                      )
+                      /* GetLocation.getCurrentPosition({
                         enableHighAccuracy: true,
                         timeout: 15000,
                     }).then((res) => {
@@ -217,7 +262,7 @@ function SellerSignUp (props) {
             setError('Please Turn On your location to setup your address and complete signup.\n\nWe require this location to locate shops in your 15 km range and this will be required only once during signup.\n\n Thank You')
             showErr(true)
                       setLoader(false)
-                    })
+                    }) */
                     }}>
                       <View style={{height: windowHeight*0.1 , width: windowWidth*0.9 ,alignItems: "center" , justifyContent: "center", backgroundColor: "#0ae38c" , marginTop: 20 , borderRadius: 10}}>
                         <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }}>Provide new location</Text>
@@ -227,13 +272,18 @@ function SellerSignUp (props) {
 
                
            <View style={{alignItems: "center" , marginTop: 25}}>
-                <TouchableOpacity style={styles.submit} onPress={() => {  
+                {
+                  fl ?
+                  <ActivityIndicator color='#0ae38c' size={29} />
+                  :
+                  <TouchableOpacity style={styles.submit} onPress={() => {  
                     submitHandler()
                 }}>
                      <Text style={{color: "white" , fontFamily: 'Montserrat-Bold' , fontSize: windowHeight*0.025 }} >
                          {props.route.params.type === "edit" ? "Save Changes" : "Submit"}
                      </Text>
                 </TouchableOpacity>
+                }
             </View>      
         </View>
 
