@@ -112,6 +112,18 @@ function OrderSummary(props) {
                 var images = res.data.faulty.product_image
                 var image = images.split(',')
                 setErrimg(image[0])
+                var notify = {
+                    title:`${res.data.faulty.product_name}`,
+                    message:`${consumer.consumer_name}  tried to order ${res.data.faulty.product_name} but it's not in stock \n\n Update Quantity Fast !`,
+                    user_id:order[0].shop_id,
+                    user_type:'shop',
+                    data:{
+                        type:'New Order'
+                    }
+                }
+                axios.post(`${url}/notify`,notify).then(res => {
+                    console.log(res.data)
+                })
             }
         })
     }
