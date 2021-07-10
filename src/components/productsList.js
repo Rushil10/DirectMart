@@ -14,7 +14,7 @@ function productsList({item , navigation}) {
                     <View style={styles.upper}>
                         <View style={{alignItems : "center"}}>
                             <Image
-                                style={{height: width*0.45,borderTopLeftRadius:20,borderTopRightRadius:20 , width: width*0.45-2,resizeMode:'cover'}}
+                                style={{height: width*0.35, width: width*0.35,resizeMode:'cover' , margin:10}}
                                 source={{uri: item.item.product_image[0]}}
                             />
                         </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },text1: {
         marginLeft: 0,
-        fontSize: 18,
+        fontSize: width*0.03,
         fontFamily: "Montserrat-Medium",
         color: "black",
         marginTop:7.5

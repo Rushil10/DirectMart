@@ -148,7 +148,7 @@ function SellerProfile(props) {
                         }
                     </View>
                 </TouchableWithoutFeedback>
-                </View>
+            </View>
 
             <View style={{}}>
 

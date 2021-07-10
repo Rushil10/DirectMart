@@ -65,7 +65,7 @@ export const orderReadyForDelivery = (item) => async dispatch => {
 
     axios.post(`${url}/notify`, {
         title: "Order ready for delivery/Pickup",
-        body: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is ready for delivery/Pickup you can check the further status on the app ",
+        message: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is ready for delivery/Pickup you can check the further status on the app ",
         user_id: item.consumer_id,
         user_type: "consumer",
         data: { type: "data is here :)"}
@@ -121,7 +121,7 @@ export const orderDelivered = (item) => async dispatch => {
 
     axios.post(`${url}/notify`, {
         title: "Order Completed",
-        body: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is delivered/picked up on " + item.consumer_address + " if not delivered or you have any issues with the order you can contact to seller via app" ,
+        message: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is delivered/picked up on " + item.consumer_address + " if not delivered or you have any issues with the order you can contact to seller via app" ,
         user_id: item.consumer_id,
         user_type: "consumer",
         data: { type: "data is here :)"}

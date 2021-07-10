@@ -103,7 +103,7 @@ function LoadingScreen(props) {
 
 
         props.navigation.replace("ChooseType")
-        //props.navigation.replace("SellerSlides")
+        // props.navigation.replace("SellerSlides")
     }
 
     React.useEffect(() => {
@@ -120,8 +120,8 @@ function LoadingScreen(props) {
             <Image source={require('../images/giphy.gif')} style={{height:width+25,width:width}}/> */}
             <LinearGradient colors={['#43cea2', '#185a9d']} style={{flex:1,width:width,justifyContent:'center',alignItems:'center'}}>
                 <Text style={{fontSize:41,color:'white',fontFamily: "Montserrat-Bold" }}>DirectMart</Text>
-                <Text style={{fontSize:21,color:'white',fontFamily: "Montserrat-Medium",padding:15,paddingTop:19,paddingBottom:0,alignContent:'center',alignSelf:'center' }} >Local Shops And Small Business</Text>
-                <Text style={{fontSize:21,color:'white',fontFamily: "Montserrat-Medium",padding:5,alignContent:'center',alignSelf:'center' }} >Need Your Support Now</Text>
+                <Text style={{fontSize:width*0.05,color:'white',fontFamily: "Montserrat-Medium",padding:15,paddingTop:19,paddingBottom:0,alignContent:'center',alignSelf:'center' }} >Local Shops And Small Business</Text>
+                <Text style={{fontSize:width*0.05,color:'white',fontFamily: "Montserrat-Medium",padding:5,alignContent:'center',alignSelf:'center' }} >Need Your Support Now</Text>
                 <View style={{position:'absolute',bottom:9,alignItems:'center'}}>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Image source={require('../images/ind.jpg')} style={{height:29,width:45,marginRight:9,borderRadius:2.5}} />

@@ -45,10 +45,10 @@ function ConsumerSlides(props) {
           <View style={{flex:1,backgroundColor:item.backgroundColor}}>
               <LinearGradient colors={[item.color1, item.color2]} style={{flex:1,width:width}}>
               <View style={{padding:9,alignItems:'center'}}>
-              <Text style={{fontSize:29,marginBottom:15,marginTop:15,color:'white',fontFamily:"Montserrat-Bold"}}>{item.title}</Text>
+              <Text style={{fontSize:width*0.05,marginBottom:15,marginTop:15,color:'white',fontFamily:"Montserrat-Bold"}}>{item.title}</Text>
               </View>
             <Image style={{width:width-25,alignSelf:'center',borderRadius:15,height:width}} source={item.image} />
-            <Text style={{fontSize:25,padding:9,marginBottom:15,marginTop:15,color:'white',fontFamily:"Montserrat-Medium"}}>{item.text}</Text>
+            <Text style={{fontSize:width*0.05,padding:9,marginBottom:15,marginTop:15,color:'white',fontFamily:"Montserrat-Medium"}}>{item.text}</Text>
               </LinearGradient>
           </View>
         );

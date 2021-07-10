@@ -12,7 +12,7 @@ function ChooseType(props) {
     return (
         <View style={{flex:1,backgroundColor:'white',alignItems:'center',justifyContent:'center'}}>
             <LinearGradient colors={['#43cea2', '#185a9d']} style={{flex:1,alignItems:'center',justifyContent:'center',width:windowWidth}}>
-            <Text style={{fontSize:25,marginBottom:20 ,color:'white', fontFamily: "Montserrat-ExtraBold"}}>Describe Yourself ?
+            <Text style={{fontSize:width*0.05,marginBottom:20 ,color:'white', fontFamily: "Montserrat-ExtraBold"}}>Describe Yourself ?
             </Text>
             <StyleButton image={<Image
                     style={{
@@ -22,7 +22,7 @@ function ChooseType(props) {
                         marginTop: 20
                     }}
                     source={require('../images/con2.jpg')}
-                />} onPressButton={() => props.navigation.push("ConsumerSignin")} color='white' fontSize={25} height={height*0.3} width={height*0.3} borderRadius={200} title='Consumer' />
+                />} onPressButton={() => props.navigation.push("ConsumerSignin")} color='white' fontSize={width*0.05} height={height*0.3} width={height*0.3} borderRadius={200} title='Consumer' />
             <View style={{height:15}}>
 
             </View>
@@ -34,7 +34,7 @@ function ChooseType(props) {
                         borderRadius: windowHeight*0.38,
                     }}
                     source={require('../images/icon1.png')}
-                />} onPressButton={() => props.navigation.push("SellerSignin")} color='white' fontSize={25} height={height*0.3} width={height*0.3}  borderRadius={200} title='Shop Owner' />
+                />} onPressButton={() => props.navigation.push("SellerSignin")} color='white' fontSize={width*0.05} height={height*0.3} width={height*0.3}  borderRadius={200} title='Shop Owner' />
             </LinearGradient>
         </View> 
     )

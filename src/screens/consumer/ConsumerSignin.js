@@ -171,7 +171,7 @@ function ConsumerSignin(props) {
                     <View style={{alignItems:'center',marginTop:15,marginBottom:15}}>
                         <Text>OR</Text>
                     </View>
-                    <TouchableOpacity onPress={goToSignup} style={{width:width-75,alignItems:'center',marginTop:0,borderRadius:9,height:50,backgroundColor:'white',borderWidth:1,borderColor:'gray',alignSelf:'center',justifyContent:'center'}}>
+                    <TouchableOpacity onPress={goToSignup} style={{marginBottom: 20 ,width:width-75,alignItems:'center',marginTop:0,borderRadius:9,height:50,backgroundColor:'white',borderWidth:1,borderColor:'gray',alignSelf:'center',justifyContent:'center'}}>
                         <View>
                         <Text style={{color:'gray',fontSize:21}}>Signup</Text>
                         </View>

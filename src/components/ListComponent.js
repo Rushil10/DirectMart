@@ -70,17 +70,17 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
             
                 <View style={styles.renderItem}>
                     <View style={styles.upper}>
-                        <View style={{flexDirection : "row"}}>
+                        <View style={{flex: 1 ,flexDirection : "row" , alignItems: "center"}}>
                             <Image
-                                style={{height: height*0.065 , width: width*0.13 , marginLeft: 10}}
+                                style={{height: height*0.065 , width: height*0.065 , marginLeft: 10}}
                                 source={require('../images/user.png')}
                             />
-                            <View style={[{flexDirection: "column" ,justifyContent: "center" , marginLeft: 5}]}>
+                            <View style={[{flex: 1 ,flexDirection: "column" ,justifyContent: "center" , marginLeft: 5}]}>
                                 <Text style={styles.text}>{item.item.consumer_name}</Text>
                                 <Text style={styles.text}>{item.item.consumer_contact}</Text>
                             </View>
                             
-                            <View style={{justifyContent: "center" , marginLeft: width*0.28}}>
+                            <View style={{flex: 1 ,justifyContent: "space-between" }}>
                                 <Text style={{fontFamily: "Montserrat-ExtraBold"}}>Price: {item.item.tota}</Text>
                             </View>
                         </View>
@@ -137,7 +137,8 @@ const styles = StyleSheet.create({
         flex: 0.3,
         // backgroundColor: "orange",
         borderRadius: 20,
-        justifyContent: "center"
+        justifyContent: "center",
+        marginVertical: 20
     },
     text: {
         fontFamily: "Montserrat-Bold"
@@ -145,12 +146,14 @@ const styles = StyleSheet.create({
     mid: {
         flex: 0.3,
         flexDirection: "row",
-        borderRadius: 20
+        borderRadius: 20,
+        marginBottom: 20
     },
     bottom: {
         flex: 0.3,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        marginBottom: 20
     },
     order: {
         height: height*0.06 , 

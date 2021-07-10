@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     fontSize: windowWidth*0.035 , fontFamily: "Montserrat-Bold" , color: "#7c7c7c"
   },
   input: {
-    height: windowHeight*0.05,
+    height: 40,
     width: windowWidth*0.8,
     marginLeft: windowWidth*0.1 ,
     marginTop: 8,

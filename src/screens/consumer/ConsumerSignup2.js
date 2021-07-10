@@ -239,7 +239,7 @@ function ConsumerSignup2(props) {
                     <Text>Give Your address a name like Work , Home etc</Text>
                     </View>
                 <View>
-                    <TouchableOpacity onPress={signup} style={{width:width-75,alignItems:'center',marginTop:25,borderRadius:9,height:50,backgroundColor:'#ff4500',alignSelf:'center',justifyContent:'center'}}>
+                    <TouchableOpacity onPress={signup} style={{marginBottom: 20 ,width:width-75,alignItems:'center',marginTop:25,borderRadius:9,height:50,backgroundColor:'#ff4500',alignSelf:'center',justifyContent:'center'}}>
                         <View>
                         {
                             !cll?

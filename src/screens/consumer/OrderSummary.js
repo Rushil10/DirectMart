@@ -203,7 +203,7 @@ function OrderSummary(props) {
                 <View style={{marginTop:9}}>
                 <TouchableWithoutFeedback onPress={createTwoButtonAlert}>
                     <View style={{padding:7.5,alignItems:'center',marginBottom:25,backgroundColor:"#ff6347",borderRadius:9}}>
-                        <Text style={{fontSize:21.5,color:'white',fontFamily: "Montserrat-Medium"}}>Cash On Delivery</Text>
+                        <Text style={{fontSize:21.5,color:'white',fontFamily: "Montserrat-Medium"}}>Place Your Order</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 </View>

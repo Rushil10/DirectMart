@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   submit: {
+      marginBottom: 20,
       width: windowWidth*0.5,
       height: windowHeight*0.06,
       backgroundColor: "#0ae38c",
