@@ -45,7 +45,7 @@ function ProductsScreen(props) {
     const addProducts = async (products) => {
         setLoading(true)
         console.log(7);
-        props.addProducts(products)
+        props.addProducts(products) 
         props.navigation.navigate("productsScreen")
         setTimeout(function(){ 
             setLoading(false)
@@ -63,7 +63,7 @@ function ProductsScreen(props) {
     return (
         <View style={{flex:1 , backgroundColor: "white" }}>
             <Header style={{color: "white" , fontFamily: "Montserrat-ExtraBold" , fontSize: height*0.02}}  backgroundColor='#0ae38c' header='Seller' height={55} width={width} />
-            {loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
+            {products.length > 0 ? loading ? <View style={{backgroundColor:'white',flex:1,alignItems:'center',justifyContent:'center'}}>
                     <Image source={require('../../../assets/loader/1490.gif')} resizeMode='contain' style={{width:width}} />
                 </View> : 
 
@@ -74,20 +74,43 @@ function ProductsScreen(props) {
                     <Text style={{color: "white" , fontFamily: "Montserrat-Bold" , fontSize: height*0.02}}>Add New Product</Text>
                 </View>
             </TouchableOpacity>
-            
-            <View style={{marginTop: 2.5 , alignItems: "center" , paddingBottom : 55}}>
-                <FlatList 
-                    data={products}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.product_id}
-                    numColumns={2}
-                />
-            </View> 
 
-            </View> 
-            
-            
-            }
+            <View style={{marginTop: 2.5 , alignItems: "center" , paddingBottom : 55}}>
+    <FlatList 
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={item => item.product_id}
+        numColumns={2}
+    />
+</View>
+
+
+            </View>
+                :   
+                
+                <View style={{alignItems: "center" , marginTop: 20}}>
+                    <Text style={{fontSize: width*0.065 , fontFamily: "Montserrat-Bold"}}>Welcome to your shop</Text>
+                    <Text style={{fontSize: width*0.055 , fontFamily: "Montserrat" , marginHorizontal: 50}}>No Products found !!!</Text>
+                        <Image source={require('../../images/gifs/noData.gif')}
+                         style={{
+                            marginTop: 20,
+                            width:width*0.5,
+                            height:width*0.5  ,
+                            marginBottom: 20,
+                        }} 
+                        /> 
+                    <TouchableOpacity onPress={() => {props.navigation.navigate("AddProducts" ,{addProducts: addProducts})}} style={{marginTop: 9 , alignItems: "center"}}>
+                <View style={{padding:9,paddingHorizontal:15, borderRadius: 200 , backgroundColor: "#0ae38c" , alignItems: "center" , justifyContent: "center"}}>
+                    <Text style={{color: "white" , fontFamily: "Montserrat-Bold" , fontSize: height*0.02}}>Add Your First Product</Text>
+                </View>
+            </TouchableOpacity>
+                </View>
+                
+                
+                
+                }
+                      
+        
     
         </View>
     )
@@ -121,9 +144,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     }
-  });
+});
 
-  const mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
     return{
         products : state.sproducts.products
     }
@@ -135,3 +158,20 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps , mapDispatchToProps)(ProductsScreen);
+{/* {products.length > 0 ? 
+
+<View style={{marginTop: 2.5 , alignItems: "center" , paddingBottom : 55}}>
+    <FlatList 
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={item => item.product_id}
+        numColumns={2}
+    />
+</View> : 
+
+<Image source={require('../../images/gifs/noData.gif')} resizeMode='contain' style={{
+    
+    width:width*0.5            
+}} />
+
+} */}

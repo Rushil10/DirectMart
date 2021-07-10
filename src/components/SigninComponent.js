@@ -120,7 +120,7 @@ class SigninComponent extends Component {
         <View>
           <ErrorModal visible={this.state.err} color='#0ae38c' onClose={this.closeErr} heading={this.state.heading} error={this.state.error} />
             <View style={{marginLeft: windowWidth*0.1 , marginTop: windowHeight*0.04}}>
-                <Text style={{fontSize: windowWidth*0.075 , fontFamily: "Montserrat-Bold"}}>Welcome to DirectMart !</Text>
+                <Text style={{fontSize: windowWidth*0.065 , fontFamily: "Montserrat-Bold"}}>Welcome to DirectMart !</Text>
                 <Text style={styles.labels}>Login to your account</Text>
             </View>
             <View style={{marginTop: 20}}>

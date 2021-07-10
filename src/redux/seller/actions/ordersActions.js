@@ -2,6 +2,7 @@ import { url } from "../../../api/api"
 import axios from "axios"
 import { AsyncStorage } from "react-native"
 import { FETCH_ORDERS ,  FETCH_OFD_ORDERS ,  FETCH_D_ORDERS , ORDER_READY_FOR_DELIVERY , ORDER_DELIVERED} from "../types"
+import dayjs from 'dayjs';
 
 export const fetchOrders = () => async dispatch => {
     console.log("Comming for redux"); 
@@ -58,11 +59,13 @@ export const orderReadyForDelivery = (item) => async dispatch => {
     console.log("Comming for redux"); 
     var token = await AsyncStorage.getItem('shop_token');
 
+    console.log(item);
+
     console.log("IAMHERE_+_++_+_+_+_+_+_+_+_++__+_+_+_+_");
 
     axios.post(`${url}/notify`, {
         title: "Order ready for delivery/Pickup",
-        body: "Your Order of " + item.tota + " rupees is ready for delivery/Pickup you can check the further status on the app ",
+        body: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is ready for delivery/Pickup you can check the further status on the app ",
         user_id: item.consumer_id,
         user_type: "consumer",
         data: { type: "data is here :)"}
@@ -118,7 +121,7 @@ export const orderDelivered = (item) => async dispatch => {
 
     axios.post(`${url}/notify`, {
         title: "Order Completed",
-        body: "Your Order of " + item.tota + " rupees is delivered/picked up if not you can contact to shop owner via app ",
+        body: "Hello " + item.consumer_name + " your Order of " + item.tota + " rupees ordered on " + dayjs(item.ordered_time).format('DD MMMM , dddd , h:m a') +" is delivered/picked up on " + item.consumer_address + " if not delivered or you have any issues with the order you can contact to seller via app" ,
         user_id: item.consumer_id,
         user_type: "consumer",
         data: { type: "data is here :)"}

@@ -5,6 +5,9 @@ import ListComponent from '../../../components/ListComponent';
 import { fetchOFDOrders } from "../../../redux/seller/actions/ordersActions";
 import { connect } from 'react-redux';
 
+const {height,width} = Dimensions.get('window')
+
+
 function ordersOutForDelivery(props) {
 
     const [ data , setData ] = React.useState([]) 
@@ -33,11 +36,29 @@ function ordersOutForDelivery(props) {
     },[])
     
         return(
-            <View>
-                <FlatList
+            <View style={{flex: 1,backgroundColor: "white"}}>
+                {data.length> 0 ? <FlatList
                     data={data}
                     renderItem={renderItem}
-                />
+                /> : 
+                
+                <View style={{alignItems: "center" , marginTop: 20}}>
+                <Text style={{fontSize: width*0.055 , fontFamily: "Montserrat-Bold"}}>No Recent Orders Found !!!</Text>
+
+                <Image source={require('../../../images/gifs/empty.gif')}
+                style={{
+                   width:width*0.6,
+                   height:width*0.6  ,
+                   marginBottom: 20,
+               }} 
+               />
+            <Text style={{fontSize: width*0.05 , fontFamily: "Montserrat" }}>No orders are ready for delivery </Text>
+            <Text style={{fontSize: width*0.05 , fontFamily: "Montserrat" , marginHorizontal: 50}}>Fasten UP ! </Text>
+
+
+               </View>
+               }
+                
             </View> 
             
         )
