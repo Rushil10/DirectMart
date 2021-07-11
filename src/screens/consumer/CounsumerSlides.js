@@ -11,7 +11,7 @@ const slides = [
       key: 1,
       title: 'Discover Local Business And Shops In Your 15km Range !',
       text: 'Order From these Shops and help promote local businesses ',
-      image: require('../../images/l3.jpg'),
+      image: require('../../images/gifs/best.gif'),
       backgroundColor: '#ff6347',
      /*  color1:'#fc575e',
       color2:'#f7b42c' */
@@ -22,7 +22,7 @@ const slides = [
       key: 2,
       title: 'Add , Update and Remove products from your cart of different Shops !',
       text: '',
-      image: require('../../images/c3.png'),
+      image: require('../../images/gifs/cart.gif'),
       backgroundColor: '#febe29',
       color1:'#fe5858',
       color2:'#ee9617'
@@ -31,7 +31,7 @@ const slides = [
       key: 3,
       title: 'Get Instantly Notified on Order Status Updates !',
       text: '',
-      image: require('../../images/n1.jpg'),
+      image: require('../../images/gifs/not.gif'),
       backgroundColor: '#22bcb5',
       color1:'#fc575e',
       color2:'#f7b42c'
