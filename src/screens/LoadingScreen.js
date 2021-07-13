@@ -107,7 +107,7 @@ function LoadingScreen(props) {
 
 
         props.navigation.replace("ChooseType")
-        //props.navigation.replace("ConsumerSlides")
+        //props.navigation.replace("SellerSlides")
     }
 
     React.useEffect(() => {

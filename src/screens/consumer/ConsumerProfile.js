@@ -10,6 +10,7 @@ import jwtDecode from 'jwt-decode';
 import Icon from 'react-native-vector-icons/Feather'
 import Icon2 from 'react-native-vector-icons/Ionicons'
 import HeaderWithButton from './ConsumerComponents/HeaderWithButton';
+import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
@@ -65,7 +66,7 @@ function ConsumerProfile(props) {
                 :
                 <View style={{backgroundColor:'white',flex:1}}>
                    <View style={{paddingTop:15,alignItems:'center'}}>
-                       <Image source={{uri:consumer.consumer_image}} style={{width:width/2,height:width/2,borderRadius:15}} />
+                       <FastImage source={{uri:consumer.consumer_image}} style={{width:width/2,height:width/2,borderRadius:15}} />
                        <Text style={{fontSize:25,paddingTop:9,color:'black',fontFamily:"Montserrat-Medium"}}>{consumer.consumer_name}</Text>
                        <View style={{flexDirection:'row',alignItems:'center',marginTop:9}}>
                             <Icon name="phone-call" color="#ff6347" size={19} />

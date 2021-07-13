@@ -47,7 +47,7 @@ function Delivered(props) {
                         ?
                         <FlatList
                     data={orders}
-                    renderItem={({item,index}) => <OrderCard item={item} status="OUT FOR DELIVERY" /> }
+                    renderItem={({item,index}) => <OrderCard item={item} status="DELIVERED" /> }
                     />
                     :
                     <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>

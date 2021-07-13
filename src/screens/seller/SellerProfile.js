@@ -9,6 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Share from 'react-native-share'
 import messaging from '@react-native-firebase/messaging';
 import ImgToBase64 from 'react-native-image-base64';
+import FastImage from 'react-native-fast-image';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -69,7 +70,7 @@ function SellerProfile(props) {
                 alignItems: "center",
                 paddingTop:15
             }} > 
-                <Image
+                <FastImage
                     style={{
                         height: windowHeight*0.4,
                         width: windowWidth,

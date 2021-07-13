@@ -7,6 +7,7 @@ import Header from '../consumer/ConsumerComponents/Header';
 import { url } from '../../api/api';
 import ListComponent from '../../components/ListComponent'
 import { fetchOrders , orderReadyForDelivery , orderDelivered } from '../../redux/seller/actions/ordersActions';
+import FastImage from 'react-native-fast-image';
 
 
 const {height,width} = Dimensions.get('window')
@@ -107,7 +108,7 @@ const renderItem = ({item}) => {
 
                     <View style={{marginLeft: 15 , flexDirection: "row"}}>
                         <View>
-                            <Image 
+                            <FastImage 
                                 source={{uri : item.product_image[0]}}
                                 style= {{height: 40 , width: 40 , marginRight: 10}}
                             />

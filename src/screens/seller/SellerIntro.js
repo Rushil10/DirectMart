@@ -11,7 +11,7 @@ const slides = [
       key: 1,
       title: 'Your Shop will be automatically appear on consumers in your 15 km range !',
       text: 'you can share your shop and your products via whatsapp and also get some new customers via app',
-      image: require('../../images/gifs/connect.gif'),
+      image: require('../../images/gifs/best.gif'),
       backgroundColor: '#ff6347',
      /*  color1:'#fc575e',
       color2:'#f7b42c' */
@@ -22,7 +22,7 @@ const slides = [
         key: 2,
         title: 'Get Notified Whenever order gets placed on your shop !',
         text: 'Instant Notifications on orders and Notify your customers about your new products or services via app',
-        image: require('../../images/gifs/best.gif'),
+        image: require('../../images/n1.jpg'),
         backgroundColor: '#22bcb5',
         color1:'#0bab64',
         color2:'#3bb78f'

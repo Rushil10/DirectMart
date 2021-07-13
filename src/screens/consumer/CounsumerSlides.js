@@ -31,7 +31,7 @@ const slides = [
       key: 3,
       title: 'Get Instantly Notified on Order Status Updates !',
       text: '',
-      image: require('../../images/gifs/not.gif'),
+      image: require('../../images/n1.jpg'),
       backgroundColor: '#22bcb5',
       color1:'#fc575e',
       color2:'#f7b42c'

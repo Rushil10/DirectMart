@@ -11,6 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Share from 'react-native-share'
 import messaging from '@react-native-firebase/messaging';
 import ImgToBase64 from 'react-native-image-base64';
+import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
@@ -159,7 +160,7 @@ function ConsumerProductDetails(props) {
                    renderItem={({item,index}) => {
                        return (
                                     <TouchableWithoutFeedback>
-                                    <Image resizeMode='contain' source={{uri:item}} style={{width:width,height:width}}/>
+                                    <FastImage resizeMode='contain' source={{uri:item}} style={{width:width,height:width}}/>
 
                                     </TouchableWithoutFeedback>                                                             
                                      

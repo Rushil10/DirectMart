@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, Text,Button,Modal,FlatList,TouchableWithoutFeedback,ActivityIndicator,Dimensions, ScrollView ,Image} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
@@ -12,7 +13,7 @@ function QuantityModal(props) {
                         <Text style={{alignSelf:'center',fontSize:21.5,}}>Insufficient Quantity</Text>
                         </View>
                     <View>
-                        <Image source={{uri:props.image}} style={{width:width/2.5,height:width/2.5}} />
+                        <FastImage source={{uri:props.image}} style={{width:width/2.5,height:width/2.5}} />
                     </View>
                     <View style={{padding:9}}>
                         <Text style={{alignSelf:'center',fontSize:18.5,}}>{props.message}</Text>

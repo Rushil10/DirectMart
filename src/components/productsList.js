@@ -3,6 +3,7 @@ import axios from 'axios';
 import { View, Text, AsyncStorage,Dimensions , TouchableOpacity , ActivityIndicator , FlatList , StyleSheet ,Image, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'; 
+import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
@@ -13,7 +14,7 @@ function productsList({item , navigation}) {
                 <View style={styles.renderItem}>
                     <View style={styles.upper}>
                         <View style={{alignItems : "center"}}>
-                            <Image
+                            <FastImage
                                 style={{height: width*0.35, width: width*0.35,resizeMode:'cover' , margin:10}}
                                 source={{uri: item.item.product_image[0]}}
                             />

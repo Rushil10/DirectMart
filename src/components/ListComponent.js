@@ -80,8 +80,8 @@ function ListComponent({item , navigation , fetchOrders , orderReadyForDelivery 
                                 <Text style={styles.text}>{item.item.consumer_contact}</Text>
                             </View>
                             
-                            <View style={{flex: 1 ,justifyContent: "space-between" }}>
-                                <Text style={{fontFamily: "Montserrat-ExtraBold"}}>Price: {item.item.tota}</Text>
+                            <View style={{ paddingRight:11}}>
+                                <Text style={{fontFamily: "Montserrat-ExtraBold",fontSize:16.5}}>Price: {item.item.tota}</Text>
                             </View>
                         </View>
                     </View>

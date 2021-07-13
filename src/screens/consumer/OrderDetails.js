@@ -44,6 +44,7 @@ function ConsumerOrderDetails(props) {
 
     React.useEffect(() => {
         getOrderDetails();
+        console.log(props.route.params)
     },[])
 
     return (
@@ -68,7 +69,7 @@ function ConsumerOrderDetails(props) {
                     <Text style={{fontFamily: "Montserrat-Medium",fontSize:15.5}}>DELIVERY STATUS</Text>
                     <View style={{flexDirection:'row',marginTop:1.5,marginBottom:1.5}}>
                         <View style={{backgroundColor:'#ff6347',alignItems:'center',paddingLeft:29,paddingRight:29,borderRadius:9,padding:2.5}}>
-                        <Text style={{color:'white',fontSize:15}}>Pending</Text>
+                        <Text style={{color:'white',fontSize:15}}>{props.route.params.status}</Text>
                             </View>
                         <View style={{flex:1}}>
                             </View>

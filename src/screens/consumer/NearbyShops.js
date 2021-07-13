@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar,Alert } from 'react-native';
+import { View, Text, AsyncStorage,Dimensions,Image,FlatList,StatusBar,Alert,AppState } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from './ConsumerComponents/Header';

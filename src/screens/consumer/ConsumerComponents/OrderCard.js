@@ -19,7 +19,7 @@ function OrderCard(props){
     dayjs.extend(relativeTime)
 
     return (
-        <TouchableWithoutFeedback onPress={() => navigation.push('orderDetails',{orderId:props.item.order_cart_id,item:props.item})}>
+        <TouchableWithoutFeedback onPress={() => navigation.push('orderDetails',{orderId:props.item.order_cart_id,status:props.status,item:props.item})}>
             <View style={{paddingLeft:15,paddingTop:15,paddingBottom:15,paddingRight:15,borderRadius:10.5,borderColor:'#ff6347',borderWidth:1,marginTop:9,marginBottom:5}}>
             <View style={{flexDirection : "row"}}>
                 <Image
