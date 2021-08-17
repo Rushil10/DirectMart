@@ -178,11 +178,6 @@ function LoadingScreen(props) {
             }, 
             (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
           );
-          PushNotification.localNotification({
-            channelId:'testing',
-            title:'hi',
-            message:'directmart'
-        })
         Linking.addEventListener('url', ({url}) => handler(url))
         setTimeout(() => {
             check()
