@@ -11,7 +11,7 @@ import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
-function ProductCard({item,token,addToCart,removeFromCart}) {
+function ProductCard({item,token,addToCart,removeFromCart,cartItems}) {
     const navigation = useNavigation();
     const [quantity,setQuantity] = React.useState(0);
 
@@ -28,6 +28,13 @@ function ProductCard({item,token,addToCart,removeFromCart}) {
             addToCart(res.data);
         })
     }
+
+    React.useEffect(() => {
+        let index = cartItems.products.findIndex(product => product.product_id === item.product_id )
+        if(index===-1){
+            setQuantity(0)
+        }
+    },[cartItems.products])
 
     const subtractFromCart = () => {
         removeFromCart(item);
@@ -85,10 +92,12 @@ function ProductCard({item,token,addToCart,removeFromCart}) {
 ProductCard.propTypes = {
     addToCart: PropTypes.func.isRequired,
     removeFromCart: PropTypes.func.isRequired,
+    cartItems:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-    latlng:state.latlng
+    latlng:state.latlng,
+    cartItems:state.cartItems
 })
 
 const mapActionsToProps = {

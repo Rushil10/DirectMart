@@ -11,6 +11,7 @@ import ErrorModal from './ConsumerComponents/ErrorModal';
 import messaging from '@react-native-firebase/messaging';
 import jwtDecode from 'jwt-decode';
 import Geolocation from 'react-native-geolocation-service';
+import { PermissionsAndroid } from 'react-native';
 
 const {height,width} = Dimensions.get('window')
 function ConsumerSignup2(props) {
@@ -38,6 +39,18 @@ function ConsumerSignup2(props) {
         const contact = props.route.params.contact
         const imgUrl = props.route.params.imgUrl
         setCll(true);
+        if (Platform.OS === 'ios') {
+            Geolocation.requestAuthorization();
+            Geolocation.setRNConfiguration({
+              skipPermissionRequests: false,
+             authorizationLevel: 'whenInUse',
+           });
+          }
+        if (Platform.OS === 'android') {
+            await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            );
+        }
         Geolocation.getCurrentPosition(
             async(position) => {
               console.log(position.coords);
@@ -65,7 +78,7 @@ function ConsumerSignup2(props) {
             showErr(true)
             setCll(false);
             },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000,forceRequestLocation:true ,showLocationDialog:true}
         );
         /* GetLocation.getCurrentPosition({
             enableHighAccuracy: true,

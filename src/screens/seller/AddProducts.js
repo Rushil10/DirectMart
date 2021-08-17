@@ -277,7 +277,7 @@ function AddProducts (props) {
                        />
                         </View>
             {
-                mimages.length >0 &&
+                (mimages.length >0 && mimages.length<6) &&
                 <View style={{alignItems:'center',marginTop:9}}>
                     <TouchableOpacity style={{alignItems:'center',width:windowWidth/2,backgroundColor:'#0ae38c',borderRadius:9}} onPress={selectImage}>
                 <View style={{padding:9}}>

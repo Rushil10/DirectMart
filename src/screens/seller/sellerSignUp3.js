@@ -1,5 +1,5 @@
 import React, { Component , useState } from 'react';
-import { Text , View , Dimensions , StyleSheet , Image , TextInput , TouchableOpacity ,ActivityIndicator , AsyncStorage} from 'react-native';
+import { Text , View , Dimensions , StyleSheet , Image , TextInput,Platform , TouchableOpacity ,ActivityIndicator , AsyncStorage} from 'react-native';
 import Navbar from '../../components/Navbar'
 import GetLocation from 'react-native-get-location'
 import axios from 'axios';
@@ -8,6 +8,7 @@ import ErrorModal from '../consumer/ConsumerComponents/ErrorModal';
 import messaging from '@react-native-firebase/messaging';
 import jwtDecode from 'jwt-decode';
 import Geolocation from 'react-native-geolocation-service';
+import { PermissionsAndroid } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -191,8 +192,20 @@ function SellerSignUp (props) {
                   <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Latitude    :   {location.latitude}</Text>
                   <Text style={[styles.labels , {marginLeft: windowWidth*0.1}]}>Longitude :   {location.longitude}</Text>
                 </View> : <View>
-                    <TouchableOpacity style={{alignItems: "center"}} onPress={() => {
+                    <TouchableOpacity style={{alignItems: "center"}} onPress={async() => {
                       setLoader(true);
+                      if (Platform.OS === 'ios') {
+                        Geolocation.requestAuthorization();
+                        Geolocation.setRNConfiguration({
+                          skipPermissionRequests: false,
+                         authorizationLevel: 'whenInUse',
+                       });
+                      }
+                    if (Platform.OS === 'android') {
+                        await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        );
+                    }
                       Geolocation.getCurrentPosition(async(position) => {
                         var location = position.coords
                         setLocation(location);
@@ -204,7 +217,7 @@ function SellerSignUp (props) {
             showErr(true)
                       setLoader(false)
                       },
-                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 ,forceRequestLocation:true}
                       )
                       /* GetLocation.getCurrentPosition({
                         enableHighAccuracy: true,
@@ -234,8 +247,20 @@ function SellerSignUp (props) {
                 {/* Add crousal for image and Latitude and Longitude use location */}
 
                 {props.route.params.type === "edit" ?  <View>
-                    <TouchableOpacity style={{alignItems: "center"}} onPress={() => {
+                    <TouchableOpacity style={{alignItems: "center"}} onPress={async() => {
                       setLoader(true);
+                      if (Platform.OS === 'ios') {
+                        Geolocation.requestAuthorization();
+                        Geolocation.setRNConfiguration({
+                          skipPermissionRequests: false,
+                         authorizationLevel: 'whenInUse',
+                       });
+                      }
+                    if (Platform.OS === 'android') {
+                        await PermissionsAndroid.request(
+                          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                        );
+                    }
                       Geolocation.getCurrentPosition(async(position) => {
                         var location = position.coords
                         setLocation(location);
@@ -247,7 +272,7 @@ function SellerSignUp (props) {
             showErr(true)
                       setLoader(false)
                       },
-                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000,forceRequestLocation:true }
                       )
                       /* GetLocation.getCurrentPosition({
                         enableHighAccuracy: true,

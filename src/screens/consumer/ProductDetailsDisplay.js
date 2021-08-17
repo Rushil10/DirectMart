@@ -15,7 +15,7 @@ import FastImage from 'react-native-fast-image';
 
 const {height,width} = Dimensions.get('window')
 
-function ConsumerProductDetails(props) {
+function ConsumerProductDetailsDisplay(props) {
 
     const [product,setProduct] = React.useState([])
     const [loading,setLoading] = React.useState(true)
@@ -45,7 +45,7 @@ function ConsumerProductDetails(props) {
          img = 'data:image/jpeg;base64,' + base64String
          Share.open({
             title:`Share My Shop ${product.product_name}`,
-            message:`Checkout this product ${product.product_name} of just Rs ${product.product_price} on Directmart by clicking on this link https://www.localapp.in/shop/product/${product.product_id} \n\n If you have not installed the app install it from playstore by this link \n\n https://play.google.com/store/apps/details?id=com.localApp`,
+            message:`Checkout this product ${product.product_name} of just Rs ${product.product_price} on DirectMart by clicking on this link https://www.localapp.in/shop/product/${product.product_id} \n\n If you have not installed the app install it from playstore by this link \n\n https://play.google.com/store/apps/details?id=com.localApp`,
             url:img
         }
         ).then((res) => {
@@ -60,12 +60,8 @@ function ConsumerProductDetails(props) {
 
     const getProductDetails = async() => {
         const id = props.route.params.product_id
-        var token = await AsyncStorage.getItem('user_token')
-        axios.get(`${url}/consumer/product/${id}`,{
-            headers:{
-                Authorization : `Bearer ${token}`
-            }
-        }).then((res) => {
+        //var token = await AsyncStorage.getItem('user_token')
+        axios.get(`${url}/consumer/productForDisplay/${id}`).then((res) => {
             console.log(res.data);
             setProduct(res.data[0])
             setLoading(false)
@@ -88,7 +84,7 @@ function ConsumerProductDetails(props) {
         }
     },[])
 
-    React.useEffect(() => {
+    /* React.useEffect(() => {
         const backAction = () => {
         if(props.route.params.product_id){
             props.navigation.replace('allShops')
@@ -104,38 +100,7 @@ function ConsumerProductDetails(props) {
         );
     
         return () => backHandler.remove();
-    }, []); 
-
-    const [quantity,setQuantity] = React.useState(0);
-
-    const addProductToCart = async() => {
-        //addToCart(item);
-        var token =await AsyncStorage.getItem('user_token')
-        setQuantity(quantity+1)
-        axios.get(`${url}/consumer/cart/${product.product_id}`,{
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            }
-        }).then(res => {
-            console.log(res.data);
-            props.addToCart(res.data);
-        })
-    }
-
-    const subtractFromCart = async() => {
-        var token =await AsyncStorage.getItem('user_token')
-        props.removeFromCart(product);
-        setQuantity(quantity-1)
-        axios.delete(`${url}/consumer/cart/${product.product_id}`,{
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            }
-        }).then(res => {
-            console.log(res.data);
-        })
-    }
+    }, []);  */
 
     return (
         <ScrollView style={{flex:1,backgroundColor:'white'}}>
@@ -196,26 +161,6 @@ function ConsumerProductDetails(props) {
                         </View>
                         <View>
                         <View>
-                    {
-                        quantity===0 ?
-                        <TouchableWithoutFeedback onPress={addProductToCart}>
-                            <View style={{paddingLeft:15,margin:15,paddingRight:15,padding:7.5,alignItems:'center',backgroundColor:'#ff6347',borderRadius:9}}>
-                                <Text style={{color:'white',fontSize:18.5}}>Add To Cart</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        :
-                        <View style={{flexDirection:'row',margin:15}}>
-                            <TouchableOpacity onPress={subtractFromCart} style={{alignItems:'center',marginRight:5,width:32.5,justifyContent:'center',padding:9,borderRadius:15,backgroundColor:'#ff6347',height:32.5}}>
-                                <Text style={{fontSize:27,lineHeight:32.5,color:'white',alignSelf:'center'}}>-</Text>
-                            </TouchableOpacity>
-                            <View style={{alignItems:'center',justifyContent:'center',marginRight:5,padding:9,borderRadius:15,backgroundColor:'white',height:32.5}}>
-                                <Text style={{fontSize:18.5,lineHeight:32.5,color:'black',alignSelf:'center'}}>{quantity}</Text>
-                            </View>
-                            <TouchableOpacity onPress={addProductToCart} style={{alignItems:'center',justifyContent:'center',padding:9,borderRadius:15,backgroundColor:'#ff6347',height:32.5}}>
-                                <Text style={{fontSize:27,lineHeight:32.5,color:'white',alignSelf:'center'}}>+</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
                 </View>
                         </View>
                         <TouchableWithoutFeedback onPress={shareHandler}>
@@ -226,24 +171,17 @@ function ConsumerProductDetails(props) {
                             <Text style={{color:'black',fontSize:18.5,marginLeft:5}}>Share this Product</Text>
                         </View>
                         </TouchableWithoutFeedback>
+                        <View>
+                        <TouchableWithoutFeedback onPress={() => props.navigation.push('ConsumerSignin')}>
+                            <View style={{alignItems:'center',backgroundColor:'#ff6347',borderRadius:15,marginBottom:5,marginHorizontal:15,padding:9}}>
+                            <Text style={{fontSize:16.5,color:'white'}}>Login to Order</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        </View>
                 </ScrollView>
             }
         </ScrollView>
     )
 }
 
-ConsumerProductDetails.propTypes = {
-    addToCart: PropTypes.func.isRequired,
-    removeFromCart: PropTypes.func.isRequired,
-}
-
-const mapStateToProps = (state) => ({
-    latlng:state.latlng
-})
-
-const mapActionsToProps = {
-    addToCart,
-    removeFromCart
-}
-
-export default connect(mapStateToProps,mapActionsToProps)(ConsumerProductDetails);
+export default ConsumerProductDetailsDisplay

@@ -56,6 +56,8 @@ import ConsumerSearch from './src/screens/consumer/ConsumerSearch';
 import ConsumerProductDetails from "./src/screens/consumer/ProductDetails";
 import ConsumerSlides from "./src/screens/consumer/CounsumerSlides";
 import SellerIntro from "./src/screens/seller/SellerIntro";
+import ProductsDisplay from "./src/screens/consumer/ProductsDisplay";
+import ConsumerProductDetailsDisplay from "./src/screens/consumer/ProductDetailsDisplay";
 
 
 
@@ -395,6 +397,8 @@ function App() {
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
         <Stack.Screen name="ConsumerSlides" component={ConsumerSlides} />
         <Stack.Screen name="SellerSlides" component={SellerIntro} />
+        <Stack.Screen name="ProductsDisplay" component={ProductsDisplay} />
+        <Stack.Screen name="ProductDetailsDisplay" component={ConsumerProductDetailsDisplay} />
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>

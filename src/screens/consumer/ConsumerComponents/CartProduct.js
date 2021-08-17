@@ -96,10 +96,12 @@ function CartProduct({item,token,addToCart,removeFromCart,changeTotal}) {
 CartProduct.propTypes = {
     addToCart: PropTypes.func.isRequired,
     removeFromCart: PropTypes.func.isRequired,
+    cartItems:PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-    latlng:state.latlng
+    latlng:state.latlng,
+    cartItems:state.cartItems
 })
 
 const mapActionsToProps = {

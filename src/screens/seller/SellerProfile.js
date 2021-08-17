@@ -43,7 +43,7 @@ function SellerProfile(props) {
          img = 'data:image/jpeg;base64,' + base64String
          Share.open({
             title:`Share My Shop ${info.shop_name}`,
-            message:`Checkout products of my shop ${info.shop_name} on localapp by clicking on this link https://www.localapp.in/shop/${k[0]}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link `,
+            message:`Checkout products of my shop ${info.shop_name} on DirectMart by clicking on this link https://www.localapp.in/shop/${k[0]}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link \n\n https://play.google.com/store/apps/details?id=com.localApp`,
             url:img
         }
         ).then((res) => {
@@ -258,7 +258,7 @@ function SellerProfile(props) {
 
              <TouchableOpacity style={{marginTop: 20}} onPress={async () => {
                  await AsyncStorage.clear();
-                 props.navigation.navigate("ChooseType");
+                 props.navigation.replace("ChooseType");
                 }}>
                 <View style={styles.submit}>
                 <MaterialCommunityIcons name="logout" color={"white"} size={24} />

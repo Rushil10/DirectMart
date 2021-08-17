@@ -8,6 +8,7 @@ import { setCartProducts } from '../redux/consumer/actions/cartActions';
 import { CommonActions } from "@react-navigation/native";
 import LinearGradient from 'react-native-linear-gradient';
 import { Easing } from 'react-native-reanimated';
+import PushNotification,{Importance} from "react-native-push-notification";
 
 const {height,width} = Dimensions.get('window')
 
@@ -104,8 +105,20 @@ function LoadingScreen(props) {
                 routes: [{name: 'Seller'}],
             });
         }
+        if(url){
+            var ids = url.split('/')
+            var id = ids[ids.length-1]
+            var name= ids[ids.length-2]
+            if(name==='product'){
 
-
+            } else {
+                var shop = {
+                    shop_id:id,
+                    shop_name:name,
+                }
+                return props.navigation.push('ProductsDisplay',{shop:shop})
+            }
+        }
         props.navigation.replace("ChooseType")
         //props.navigation.replace("SellerSlides")
     }
@@ -125,10 +138,97 @@ function LoadingScreen(props) {
             //easing:Easing.ease,
             useNativeDriver:true
         }).start()
+        PushNotification.configure({
+            // (optional) Called when Token is generated (iOS and Android)
+            onRegister: function (token) {
+              console.log("TOKEN:", token);
+            },
+            // (required) Called when a remote is received or opened, or local notification is opened
+            onNotification: function (notification) {
+              console.log("NOTIFICATION:", notification);
+            },
+          
+            // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
+            onAction: function (notification) {
+              console.log("ACTION:", notification.action);
+              console.log("NOTIFICATION:", notification);
+          
+              // process the action
+            },
+            onRegistrationError: function(err) {
+              console.error(err.message, err);
+            },
+            permissions: {
+              alert: true,
+              badge: true,
+              sound: true,
+            },
+            popInitialNotification: true,
+            requestPermissions: true,
+          });
+          PushNotification.createChannel( 
+            {
+              channelId: "testing", // (required)
+              channelName: "My channel", // (required)
+              channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+              playSound: false, // (optional) default: true
+              soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+              importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+              vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+            }, 
+            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+          );
+          PushNotification.localNotification({
+            channelId:'testing',
+            title:'hi',
+            message:'directmart'
+        })
+        Linking.addEventListener('url', ({url}) => handler(url))
         setTimeout(() => {
             check()
         }, 2500);
     },[])
+
+    const handler = async(url) => {
+        var user_token = await AsyncStorage.getItem('user_token')
+        var shop_token = await AsyncStorage.getItem('shop_token')
+        if(shop_token){
+            return;
+        }
+        if(user_token){
+            if(url){
+                var ids = url.split('/')
+                var id = ids[ids.length-1]
+                var name= ids[ids.length-2]
+                if(name==='product'){
+                    console.log('here')
+                    return props.navigation.navigate('ProductDet',{product_id:id})
+                } else {
+                    var shop = {
+                        shop_id:id,
+                        shop_name:name,
+                    }
+                    //return props.navigation.replace('Consumer',{screen:'shops',params:{screen:'allShops',params:{screen:'ShopProducts',params:{shop}}}})
+                    return props.navigation.navigate('ShopProducts',{shop:shop})
+                }
+            }
+        } else {
+            if(url){
+                var ids = url.split('/')
+                var id = ids[ids.length-1]
+                var name= ids[ids.length-2]
+                if(name==='product'){
+                    return props.navigation.navigate('ProductDetailsDisplay',{product_id:id})
+                } else {
+                    var shop = {
+                        shop_id:id,
+                        shop_name:name,
+                    }
+                    return props.navigation.push('ProductsDisplay',{shop:shop})
+                }
+            }
+        }
+    }
 
     return (
         <View style={{alignItems:'center',flex:1}}>

@@ -70,8 +70,8 @@ function ConsumerSignup1(props) {
     const uploadImageToFirebase = async() => {
         if(path){
             setLoading(true);
-            const name = generateString(9);
-            let reference = storage().ref(name);
+            const tname = generateString(9);
+            let reference = storage().ref(tname);
             await reference.putFile(path[0].uri)
             let url = await reference.getDownloadURL();
             console.log(url);

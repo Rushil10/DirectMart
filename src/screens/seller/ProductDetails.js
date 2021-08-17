@@ -78,7 +78,7 @@ function ProductDetails (props) {
          img = 'data:image/jpeg;base64,' + base64String
          Share.open({
             title:`Share My Shop ${product.product_name}`,
-            message:`Checkout this product ${product.product_name} of my shop of just Rs ${product.product_price} on localapp by clicking on this link \n https://www.localapp.in/shop/product/${product.product_id} \n\n If you have not installed the app install it from playstore by this link `,
+            message:`Checkout this product ${product.product_name} of my shop of just Rs ${product.product_price} on DirectMart by clicking on this link \n https://www.localapp.in/shop/product/${product.product_id} \n\n If you have not installed the app install it from playstore by this link \n\n https://play.google.com/store/apps/details?id=com.localApp`,
             url:img
         }
         ).then((res) => {
@@ -336,7 +336,7 @@ function ProductDetails (props) {
                        />
                         </View>
             {
-                mimages.length >0 &&
+                (mimages.length >0 && mimages.length < 6) &&
                 <View style={{alignItems:'center',marginTop:9}}>
                     <View style={{position:'absolute',top:0,right:25}}>
                         <TouchableOpacity onPress={shareHandler} style={{width:45,height:45,padding:7.5,borderRadius:7.5,alignItems:'center',justifyContent:'center',backgroundColor:'#ff616d'}}>

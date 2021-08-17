@@ -51,7 +51,14 @@ function CurrentOrders(props) {
                     />
                     :
                     <View style={{flex:1,justifyContent:'center',alignItems:'center',padding:9}}>
-                        <Text style={{fontSize:22.5,color:'gray'}}>No Orders are Currently Placed</Text> 
+                        <Image source={require('../../images/gifs/empty.gif')}
+                 style={{
+                    width:width*0.6,
+                    height:width*0.6  ,
+                    marginBottom: 20,
+                }} 
+                /> 
+                        <Text style={{fontSize:25,color:'gray'}}>No Orders are Currently Placed</Text> 
                         </View>
                     }
                 </View>

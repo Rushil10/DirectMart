@@ -11,6 +11,8 @@ import { Linking } from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import Share from 'react-native-share'
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import jwtDecode from 'jwt-decode';
+import ImgToBase64 from 'react-native-image-base64';
 
 
 
@@ -39,7 +41,7 @@ function SellerScreen(props) {
          img = 'data:image/jpeg;base64,' + base64String
          Share.open({
             title:`Share My Shop ${info.shop_name}`,
-            message:`Checkout products of my shop ${info.shop_name} on localapp by clicking on this link https://www.localapp.in/shop/${k[0]}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link `,
+            message:`Checkout products of my shop ${info.shop_name} on DirectMart by clicking on this link https://www.localapp.in/shop/${k[0]}/${info.shop_id} \n\n If you have not installed the app install it from playstore by this link \n\n https://play.google.com/store/apps/details?id=com.localApp`,
             url:img
         }
         ).then((res) => {
@@ -95,6 +97,7 @@ function SellerScreen(props) {
     },[])
 
     React.useEffect(() => {
+        console.log('changed')
         setLoading(true) 
         setProducts(props.orders.sorders.orders)
         setLoading(false)
@@ -118,9 +121,10 @@ function SellerScreen(props) {
         )
     }
 
-    const reload = () => {
+    const reload = async() => {
         setLoading(true) 
-        props.fetchOrders
+        //var token = await AsyncStorage.getItem('shop_token');
+        props.fetchOrders()
         setTimeout(function(){ 
             setLoading(false)
          }, 3000);
